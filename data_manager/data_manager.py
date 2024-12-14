@@ -1,5 +1,5 @@
-from data.data_manager_interface import DataManagerInterface
-from data.data_models import User, Movie, UserMovie
+from data_manager.data_manager_interface import DataManagerInterface
+from data_manager.data_models import User, Movie, UserMovie
 
 
 class SQLiteDataManager(DataManagerInterface):
