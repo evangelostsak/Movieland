@@ -30,3 +30,6 @@ class SQLiteDataManager(DataManagerInterface):
 
     def delete_movie(self, movie_id):
         pass
+
+    def get_all_movies(self):
+        pass

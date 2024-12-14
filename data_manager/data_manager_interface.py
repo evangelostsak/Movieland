@@ -38,3 +38,6 @@ class DataManagerInterface(ABC):
     @abstractmethod
     def delete_movie(self, movie_id):
         pass
+
+    def get_all_movies(self):
+        pass
