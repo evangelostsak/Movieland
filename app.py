@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{base_dir}/data/movies.sqlit
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize DataManager
-data = SQLiteDataManager(app)
+data_manager = SQLiteDataManager(app)
 
 # Table creation, run only once
 # with app.app_context():
@@ -24,7 +24,54 @@ data = SQLiteDataManager(app)
 
 @app.route("/", methods=["GET"])
 def home():
+    """Flask route for homepage, home.html gets rendered"""
     return render_template("home.html")
+
+
+@app.route("/users", methods=["GET"])
+def list_users():
+    users = data_manager.get_all_users()
+    return render_template("users.html", users=users)
+
+
+@app.route("/movies", methods=["GET"])
+def list_movies():
+    pass
+
+
+@app.route("/users/<user_id>", methods=["GET"])
+def user_movies(user_id):
+    pass
+
+
+@app.route("/add_user", methods=["GET", "POST"])
+def add_user():
+    pass
+
+
+@app.route("/update_user", methods=["GET", "POST"])
+def update_user(user_id):
+    pass
+
+
+@app.route("/users/<user_id>/delete_user", methods=["GET"])
+def delete_user(user_id):
+    pass
+
+
+@app.route("/add_movie", methods=["GET", "POST"])
+def add_movie(user_id):
+    pass
+
+
+@app.route("/users/<user_id>/update_movie/<movie_id>", methods=["GET", "POST"])
+def update_movie(user_id, movie_id):
+    pass
+
+
+@app.route("/users/<user_id>/delete_movie/<movie_id>", methods=["GET"])
+def delete_movie(user_id, movie_id):
+    pass
 
 
 if __name__ == "__main__":
