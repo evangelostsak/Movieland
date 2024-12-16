@@ -1,6 +1,6 @@
 import os
 import sqlalchemy
-from flask import Flask, request, render_template, redirect, flash, url_for
+from flask import Flask, request, render_template, redirect, flash
 from data_manager.SQLite_data_manager import SQLiteDataManager
 from dotenv import load_dotenv
 

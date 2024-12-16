@@ -87,8 +87,8 @@ class SQLiteDataManager(DataManagerInterface):
             return f"User with ID '{user_id}' and their entries are successfully deleted."
 
         except SQLAlchemyError as e:
-            print(f"Error deleting user with ID {user_id}: {e}")
             self.db.session.rollback()
+            return f"Error deleting user with ID {user_id}: {e}"
 
     def update_user(self, user_id, user_name):
         """Update user's name in database"""
@@ -103,18 +103,18 @@ class SQLiteDataManager(DataManagerInterface):
             return f"User '{user_name}' was updated successfully."
 
         except SQLAlchemyError as e:
-            print(f"Error updating user with ID {user_id}: {e}")
             self.db.session.rollback()
+            return f"Error updating user with ID {user_id}: {e}"
 
     def get_movie(self, movie_id):
         """Get a movie by its ID"""
         try:
             movie = self.db.session.query(Movie).filter(Movie.id == movie_id).one_or_none()
             if not movie:
-                raise ValueError(f"No user found with ID {movie_id}")
+                raise ValueError(f"No movie found with ID {movie_id}")
             return movie
         except SQLAlchemyError as e:
-            print(f"Error fetching user with ID {movie_id}: {e}")
+            print(f"Error fetching movie with ID {movie_id}: {e}")
             raise
 
     def add_movie(self, user_id, title, director=None, release_year=None, rating=None, poster=None):
