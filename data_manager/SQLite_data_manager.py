@@ -1,7 +1,7 @@
 from data_manager.data_manager_interface import DataManagerInterface
 from data_manager.data_models import User, Movie, UserMovie, db
 from sqlalchemy.exc import SQLAlchemyError
-from movie_fetcher import movie_fetcher
+from movie_fetcher import movie_fetcher_omdb
 
 
 class SQLiteDataManager(DataManagerInterface):
@@ -69,8 +69,8 @@ class SQLiteDataManager(DataManagerInterface):
             return f"User {user} has been successfully added!"
 
         except SQLAlchemyError as e:
-            print(f"Error adding user '{user}': {e}")
             self.db.session.rollback()
+            return f"Error adding user '{user}': {e}"
 
     def delete_user(self, user_id):
         """Deletes user and their entries from the database"""
@@ -122,7 +122,7 @@ class SQLiteDataManager(DataManagerInterface):
 
         try:
             # Fetch additional movie data from OMDb if not provided
-            movie_data = movie_fetcher(title)
+            movie_data = movie_fetcher_omdb(title)
             if movie_data:
                 director = director or movie_data['director']
                 rating = rating or movie_data['rating']
