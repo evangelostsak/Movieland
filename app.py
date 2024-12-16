@@ -33,8 +33,9 @@ def list_users():
     """Display all users in the database"""
     users = data_manager.get_all_users()
     message = request.args.get('message')
-    flash(message)
-    return render_template("users.html", users=users, message=message)
+    if message:
+        flash(message)
+    return render_template("users.html", users=users)
 
 
 @app.route("/movies", methods=["GET"])
@@ -42,7 +43,8 @@ def list_movies():
     """Display all movies in the database"""
     movies = data_manager.get_all_movies()
     message = request.args.get('message')
-    flash(message)
+    if message:
+        flash(message)
     return render_template("movies.html", movies=movies, message=message)
 
 
@@ -58,6 +60,9 @@ def user_movies(user_id):
 
     try:
         movies = data_manager.get_user_movies(user_id)
+        message = request.args.get('message')
+        if message:
+            flash(message)
     except Exception as e:
         print(f"Error fetching movies for user {user_id}: {e}")
         movies = []
@@ -96,7 +101,7 @@ def add_user():
         return render_template("add_user.html")
 
 
-@app.route("/update_user", methods=["GET", "POST"])
+@app.route("/users/<user_id>/update_user", methods=["GET", "POST"])
 def update_user(user_id):
     """Update a users details"""
     if request.method == "GET":
@@ -139,8 +144,8 @@ def delete_user(user_id):
         if not del_user:
             message = f"User with ID {user_id} couldn't be found."
             return redirect(f'/users?=message={message}')
-        message = f"User {del_user} has been deleted successfully!"
-        return redirect(f'/users?message={message}')
+        # message = f"User {del_user} has been deleted successfully!"
+        return redirect(f'/users?message={del_user}')
 
     except Exception as e:
         print(f"Error deleting user: {e}")
@@ -188,8 +193,8 @@ def update_movie(user_id, movie_id):
         return render_template('update_movie.html', movie=movie, user_id=user_id)
 
     if request.method == "POST":
-        personal_title = request.form.get('title').strip()
         personal_rating = request.form.get('rating').strip()
+        movie = data_manager.get_movie(movie_id)
 
         try:
             data_manager.update_movie(movie_id=movie_id, user_id=user_id, rating=personal_rating)
@@ -199,7 +204,7 @@ def update_movie(user_id, movie_id):
             return render_template('update_movie.html', movie=data_manager.get_movie(movie_id),
                                    user_id=user_id)
 
-        flash(f"Movie '{personal_title}' has been updated successfully!")
+        flash(f"Movie '{movie.title}' has been updated successfully!")
         return render_template('update_movie.html', movie=data_manager.get_movie(movie_id),
                                user_id=user_id)
 
@@ -208,7 +213,7 @@ def update_movie(user_id, movie_id):
 def delete_movie(user_id, movie_id):
     """Deletes a user's movie"""
     try:
-        del_movie = data_manager.delete_movie(user_id, movie_id)
+        del_movie = data_manager.delete_movie(movie_id, user_id)
 
         if not del_movie:
             message = f"Movie '{movie_id}' not found."
