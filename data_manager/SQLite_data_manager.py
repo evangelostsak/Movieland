@@ -117,7 +117,7 @@ class SQLiteDataManager(DataManagerInterface):
             print(f"Error fetching user with ID {movie_id}: {e}")
             raise
 
-    def add_movie(self, user_id, title, director, release_year, rating, poster):
+    def add_movie(self, user_id, title, director=None, release_year=None, rating=None, poster=None):
         """Adds new movie to the database, omdb API used"""
 
         try:
@@ -157,7 +157,7 @@ class SQLiteDataManager(DataManagerInterface):
             print(f"Error: {e}")
             self.db.session.rollback()
 
-    def update_movie(self, movie_id, rating):
+    def update_movie(self, movie_id, user_id, rating=None):
         """Update a movie in the database"""
         try:
             update_movie = self.get_movie(movie_id)
