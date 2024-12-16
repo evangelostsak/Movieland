@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Update User{% endblock %}
+
+{% block content %}
+<h2>Update User</h2>
+<form method="POST">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" value="{{ user.name }}" required minlength="3" maxlength="20">
+    <br><br>
+    <button type="submit" class="btn">Update User</button>
+</form>
+{% endblock %}

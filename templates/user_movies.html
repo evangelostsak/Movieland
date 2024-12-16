@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.name }}'s Movies{% endblock %}
+
+{% block content %}
+<h2>{{ user.name }}'s Movies</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Rating</th>
+        <th>Actions</th>
+    </tr>
+    {% for movie in movies %}
+    <tr>
+        <td>{{ movie.id }}</td>
+        <td>{{ movie.title }}</td>
+        <td>{{ movie.rating }}</td>
+        <td>
+            <a href="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}" class="btn">Update</a>
+            <a href="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}" class="btn btn-delete">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('add_movie', user_id=user.id) }}" class="btn">Add Movie</a>
+{% endblock %}

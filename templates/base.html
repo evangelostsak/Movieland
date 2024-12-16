@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Movie-land{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Movie-land</h1>
+    </header>
+    <nav>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('list_users') }}">Users</a>
+        <a href="{{ url_for('list_movies') }}">Movies</a>
+        <a href="{{ url_for('add_user') }}">Add User</a>
+    </nav>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages|length > 0 %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+    <footer>
+        <p>&copy; 2024 Flask App</p>
+    </footer>
+</body>
+</html>
