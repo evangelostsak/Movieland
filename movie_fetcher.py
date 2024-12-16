@@ -6,7 +6,7 @@ load_dotenv()
 OMDB_API_KEY = os.getenv('OMDB_API_KEY')
 
 
-def movie_fetcher(title):
+def movie_fetcher_omdb(title):
     """Fetching movie details from OMDb API"""
     api_url = f"http://www.omdbapi.com/?t={title}&apikey={OMDB_API_KEY}"
     try:
@@ -18,10 +18,11 @@ def movie_fetcher(title):
             return None
 
         movie_details = {
-            "title": movie_data.get("Title"),
-            "year": movie_data.get("Year"),
+            "title": movie_data.get("Title", ''),
+            "release_year": movie_data.get("Year", ''),
             "rating": float(movie_data.get("imdbRating", 0)),
             "poster": movie_data.get("Poster"),
+            "director": movie_data.get("Director", ''),
             "link": movie_data.get("imdbID")
         }
         return movie_details
