@@ -131,6 +131,9 @@ class SQLiteDataManager(DataManagerInterface):
                 release_year = release_year or movie_data['release_year']
                 link = link or movie_data['link']
 
+            if movie_data is None:
+                return None
+
             # Check if the movie already exists in the database
             existing_movie = (
                 self.db.session.query(Movie)

@@ -173,6 +173,10 @@ def add_movie(user_id):
         try:
             data_manager.add_movie(user_id, title)
 
+            if data_manager.add_movie(user_id, title) is None:
+                flash(f"Movie '{title}' doesn't exist. Make sure title is correct.")
+                return render_template("add_movie.html", user=user_id)
+
         except Exception as e:
             print(f"Error: {e}")
             flash("Error while adding movie. Try again!")
