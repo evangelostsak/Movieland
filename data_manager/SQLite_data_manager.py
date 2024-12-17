@@ -137,6 +137,8 @@ class SQLiteDataManager(DataManagerInterface):
                 .filter_by(title=title, release_year=release_year)
                 .first()
                 )
+            # Generate imdb link
+            imdb_link = f"https://www.imdb.com/title/{link}"
             if not existing_movie:
                 new_movie = Movie(
                     title=title,
@@ -144,7 +146,7 @@ class SQLiteDataManager(DataManagerInterface):
                     release_year=release_year,
                     rating=rating,
                     poster=poster,
-                    link=link
+                    link=imdb_link
                 )
                 self.db.session.add(new_movie)
                 self.db.session.commit()
