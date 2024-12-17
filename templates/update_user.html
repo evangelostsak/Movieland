@@ -1,13 +1,14 @@
 {% extends "base.html" %}
-
 {% block title %}Update User{% endblock %}
-
+{% block pagename %}
+    <h2>Update User</h2>
+{% endblock %}
 {% block content %}
-<h2>Update User</h2>
-<form method="POST">
-    <label for="name">Name:</label><br>
-    <input type="text" id="name" name="name" value="{{ user.name }}" required minlength="3" maxlength="20">
-    <br><br>
-    <button type="submit" class="btn">Update User</button>
-</form>
+<div class="form-container">
+    <form action="{{ url_for('update_user', user_id=user.id) }}" method="post" class="form-container">
+        <label for="user_name">New User Name:</label>
+        <input type="text" id="user_name" name="user_name" value="{{ user.name }}" required>
+        <button type="submit" class="btn submit-btn">Update User</button>
+    </form>
+    </div>
 {% endblock %}

@@ -1,28 +1,20 @@
 {% extends "base.html" %}
-
 {% block title %}Users{% endblock %}
-
 {% block pagename %}
-        <h3>Users</h3>
-        {% endblock %}
+    <h2>All Users</h2>
+{% endblock %}
 {% block content %}
-<h2>Users</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Actions</th>
-    </tr>
-    {% for user in users %}
-    <tr>
-        <td>{{ user.id }}</td>
-        <td>{{ user.name }}</td>
-        <td>
-            <a href="{{ url_for('user_movies', user_id=user.id) }}" class="btn">View Movies</a>
-            <a href="{{ url_for('update_user', user_id=user.id) }}" class="btn">Update</a>
-            <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-delete">Delete</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+    <div class="user-grid">
+        {% for user in users %}
+            <div class="card user-card">
+                <h2>{{ user.name }}</h2>
+                <p><strong>ID:</strong> {{ user.id }}</p>
+                <div class="actions">
+                    <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn delete-btn">Delete</a>
+                    <a href="{{ url_for('update_user', user_id=user.id) }}" class="btn update-btn">Update</a>
+                    <a href="{{ url_for('user_movies', user_id=user.id) }}" class="btn view-btn">View Movies</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

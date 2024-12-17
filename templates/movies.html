@@ -1,23 +1,33 @@
 {% extends "base.html" %}
-
 {% block title %}Movies{% endblock %}
 {% block pagename %}
-        <h3>Movies</h3>
-        {% endblock %}
+    <h2>All Movies</h2>
+{% endblock %}
 {% block content %}
-<h2>Movies</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Rating</th>
-    </tr>
-    {% for movie in movies %}
-    <tr>
-        <td>{{ movie.id }}</td>
-        <td>{{ movie.title }}</td>
-        <td>{{ movie.rating }}</td>
-    </tr>
-    {% endfor %}
-</table>
+
+    <div class="movie-grid">
+        {% for movie in movies %}
+            <div class="card movie-card">
+                <!-- Movie Poster -->
+                {% if movie.poster %}
+                    <img src="{{ movie.poster }}" alt="{{ movie.title }} Poster" class="movie-poster">
+                {% else %}
+                    <img src="{{ url_for('static', filename='default-poster.jpg') }}" alt="Default Poster" class="movie-poster">
+                {% endif %}
+
+                <!-- Movie Details -->
+                <div class="movie-info">
+                    <h3>{{ movie.title }}</h3>
+                    <p><strong>Release Year:</strong> {{ movie.release_year or 'N/A' }}</p>
+                    <p><strong>Director:</strong> {{ movie.director or 'N/A' }}</p>
+                    <p><strong>Rating:</strong> {{ movie.rating or 'N/A' }}</p>
+                    {% if movie.link %}
+                        <p><a href="{{ movie.link }}" target="_blank" class="btn link-btn">More Info</a></p>
+                    {% endif %}
+                </div>
+
+
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

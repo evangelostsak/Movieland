@@ -1,13 +1,14 @@
 {% extends "base.html" %}
-
 {% block title %}Update Movie{% endblock %}
-
+{% block pagename %}
+    <h2>Update Movie: {{ movie.title }}</h2>
+{% endblock %}
 {% block content %}
-<h2>Update Movie</h2>
-<form method="POST">
-    <p><strong>{{movie.title}}</strong></p>
-    <label for="rating">Rating:</label><br>
-    <input type="number" id="rating" name="rating" value="{{ movie.rating }}" min="1" max="10" step="0.1"><br><br>
-    <button type="submit" class="btn">Update Movie</button>
-</form>
+<div class="form-container">
+    <form action="{{ url_for('update_movie', movie_id=movie.id, user_id=user_id) }}" method="post">
+        <label for="rating">New Rating:</label>
+        <input type="text" id="rating" name="rating" value="{{ movie.rating or '' }}" required>
+        <button type="submit" class="btn submit-btn">Update Movie</button>
+    </form>
+    </div>
 {% endblock %}

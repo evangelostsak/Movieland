@@ -1,27 +1,41 @@
 {% extends "base.html" %}
-
-{% block title %}{{ user.name }}'s Movies{% endblock %}
-
+{% block title %}User Movies{% endblock %}
+{% block pagename %}
+    <h2>Movies for {{ user.name }}</h2>
+{% endblock %}
 {% block content %}
-<h2>{{ user.name }}'s Movies</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Rating</th>
-        <th>Actions</th>
-    </tr>
-    {% for movie in movies %}
-    <tr>
-        <td>{{ movie.id }}</td>
-        <td>{{ movie.title }}</td>
-        <td>{{ movie.rating }}</td>
-        <td>
-            <a href="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}" class="btn">Update</a>
-            <a href="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}" class="btn btn-delete">Delete</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-<a href="{{ url_for('add_movie', user_id=user.id) }}" class="btn">Add Movie</a>
+    <!-- Add Movie Button Positioned -->
+    <div class="add-movie-container">
+        <a href="{{ url_for('add_movie', user_id=user.id) }}" class="btn add-movie-btn">+ Add Movie</a>
+    </div>
+
+    <div class="movie-grid">
+        {% for movie in movies %}
+            <div class="card movie-card">
+                <!-- Movie Poster -->
+                {% if movie.poster %}
+                    <img src="{{ movie.poster }}" alt="{{ movie.title }} Poster" class="movie-poster">
+                {% else %}
+                    <img src="{{ url_for('static', filename='default-poster.jpg') }}" alt="Default Poster" class="movie-poster">
+                {% endif %}
+
+                <!-- Movie Details -->
+                <div class="movie-info">
+                    <h3>{{ movie.title }}</h3>
+                    <p><strong>Release Year:</strong> {{ movie.release_year or 'N/A' }}</p>
+                    <p><strong>Director:</strong> {{ movie.director or 'N/A' }}</p>
+                    <p><strong>Rating:</strong> {{ movie.rating or 'N/A' }}</p>
+                    {% if movie.link %}
+                        <p><a href="{{ movie.link }}" target="_blank" class="btn link-btn">More Info</a></p>
+                    {% endif %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="actions">
+                    <a href="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" class="btn edit-btn">Edit</a>
+                    <a href="{{ url_for('delete_movie', movie_id=movie.id, user_id=user.id) }}" class="btn delete-btn">Remove</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
