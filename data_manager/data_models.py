@@ -51,7 +51,8 @@ class Movie(db.Model):
     def __repr__(self):
         """Returns a string representation of the Movie model, debugging-friendly"""
         return (f"Movie(id = {self.id}, title = {self.title}, release_year = {self.release_year}, "
-                f"poster = {self.poster}, director = {self.director}, rating = {self.rating})")
+                f"poster = {self.poster}, director = {self.director}, rating = {self.rating},"
+                f"link = {self.link}")
 
 
 class UserMovie(db.Model):
