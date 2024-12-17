@@ -117,7 +117,8 @@ class SQLiteDataManager(DataManagerInterface):
             print(f"Error fetching movie with ID {movie_id}: {e}")
             raise
 
-    def add_movie(self, user_id, title, director=None, release_year=None, rating=None, poster=None):
+    def add_movie(self, user_id, title, director=None,
+                  release_year=None, rating=None, poster=None, link=None):
         """Adds new movie to the database, omdb API used"""
 
         try:
@@ -128,6 +129,7 @@ class SQLiteDataManager(DataManagerInterface):
                 rating = rating or movie_data['rating']
                 poster = poster or movie_data['poster']
                 release_year = release_year or movie_data['release_year']
+                link = link or movie_data['link']
 
             # Check if the movie already exists in the database
             existing_movie = (
@@ -141,7 +143,8 @@ class SQLiteDataManager(DataManagerInterface):
                     director=director,
                     release_year=release_year,
                     rating=rating,
-                    poster=poster
+                    poster=poster,
+                    link=link
                 )
                 self.db.session.add(new_movie)
                 self.db.session.commit()

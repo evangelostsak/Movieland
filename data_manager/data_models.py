@@ -39,6 +39,7 @@ class Movie(db.Model):
     director = Column(String, nullable=True)
     rating = Column(Float, nullable=False)
     poster = Column(String, nullable=True)
+    link = Column(String, nullable=True)
 
     # Relationship update
     user_movies = relationship('UserMovie', backref='movie', cascade='all, delete', lazy=True)
