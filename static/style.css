@@ -410,3 +410,8 @@ header::before {
     letter-spacing: 5px;
     z-index: 1;
 }
+.h2_home {
+    text-align: center;
+    font-size: 2.5rem;
+    letter-spacing: 5px;
+}
