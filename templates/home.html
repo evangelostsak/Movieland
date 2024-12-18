@@ -1,10 +1,22 @@
 {% extends "base.html" %}
 
-
 {% block pagename %}
-        <h2>Home</h2>
-        {% endblock %}
+    <h2>Home</h2>
+{% endblock %}
+
 {% block content %}
-<h2 class="h2_home">Welcome to the Movie App</h2>
-<p>Navigate through the app to manage users and movies.</p>
+    <h2 class="h2_home">Welcome to MovieLand!</h2>
+<div class="content_home">
+    <p>Your personal movie hub for exploring, managing, and enjoying films.</p>
+    <p>Here, you can:</p>
+    <ul>
+        <li><strong>Add Movies:</strong> Search and add your favorite movies from OMDb.</li>
+        <li><strong>Manage Users:</strong> Create, update, and delete users in the app.</li>
+        <li><strong>Movie Management:</strong> Associate movies with users, update their details, and remove them when needed.</li>
+        <li><strong>Movie Collection:</strong> Keep track of all your movies in a personalized list.</li>
+        <li><strong>Interactive Actions:</strong> Like, update, and delete movies with ease!</li>
+    </ul>
+    <p>Explore, organize, and keep your movie collection fresh and exciting!</p>
+    <p>Read about all the detailed functionalities of the app in the 'Help' page!</p>
+        </div>
 {% endblock %}

@@ -410,8 +410,58 @@ header::before {
     letter-spacing: 5px;
     z-index: 1;
 }
+/* h2 in homepage */
 .h2_home {
     text-align: center;
     font-size: 2.5rem;
     letter-spacing: 5px;
+}
+/* content in homepage */
+/* Style for content_home */
+.content_home {
+    background-color: rgba(0, 0, 0, 0.7); /* Dark background with transparency */
+    color: #e0e0e0;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);
+    margin-top: 2rem;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect on content */
+.content_home:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.9);
+}
+* Style for unordered list */
+.content_home ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+/* List item styles */
+.content_home li {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+/* Strong text for feature emphasis */
+.content_home strong {
+    color: #4CAF50; /* Accent color for strong text */
+}
+
+/* Paragraph styles */
+.content_home p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* Add smooth scrolling for content */
+html {
+    scroll-behavior: smooth;
 }
