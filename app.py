@@ -155,8 +155,9 @@ def delete_user(user_id):
 
 @app.route("/users/<user_id>/add_movie", methods=["GET", "POST"])
 def add_movie(user_id):
-    """Add movie to a specific room"""
+    """Add movie to a specific user."""
     try:
+        # Fetch user details for display or validation
         user_name = data_manager.get_user(user_id)
     except sqlalchemy.exc.NoResultFound:
         return redirect('/404')
@@ -166,24 +167,30 @@ def add_movie(user_id):
 
     if request.method == "POST":
         title = request.form.get('title', '').strip()
+
+        # Validate input
         if not title:
             flash("Title is required.")
-            return render_template("add_movie.html")
+            return render_template("add_movie.html", user=user_name)
 
         try:
-            data_manager.add_movie(user_id, title)
+            # Call add_movie and save results
+            result = data_manager.add_movie(user_id, title)
 
-            if data_manager.add_movie(user_id, title) is None:
-                flash(f"Movie '{title}' doesn't exist. Make sure title is correct.")
-                return render_template("add_movie.html", user=user_id)
+            # Check the result of add_movie
+            if result is None:  # Movie not found or failed to add
+                flash(f"Movie '{title}' doesn't exist. Make sure the title is correct.")
+                return render_template("add_movie.html", user=user_name)
 
         except Exception as e:
+            # Log and display any unexpected errors
             print(f"Error: {e}")
-            flash("Error while adding movie. Try again!")
-            return render_template('add_movie.html', user=user_name)
+            flash("An error occurred while adding the movie. Please try again.")
+            return render_template("add_movie.html", user=user_name)
 
-        flash(f"Movie '{title}' has been added successfully")
-        return render_template('add_movie.html', user=user_name)
+        # Success case: movie added
+        flash(f"Movie '{title}' has been added successfully.")
+        return render_template("add_movie.html", user=user_name)
 
 
 @app.route("/users/<user_id>/update_movie/<movie_id>", methods=["GET", "POST"])

@@ -119,51 +119,48 @@ class SQLiteDataManager(DataManagerInterface):
 
     def add_movie(self, user_id, title, director=None,
                   release_year=None, rating=None, poster=None, link=None):
-        """Adds new movie to the database, omdb API used"""
-
+        """Adds a new movie to the database."""
         try:
-            # Fetch additional movie data from OMDb if not provided
+            # Fetch movie data from OMDb
             movie_data = movie_fetcher_omdb(title)
-            if movie_data:
-                director = director or movie_data['director']
-                rating = rating or movie_data['rating']
-                poster = poster or movie_data['poster']
-                release_year = release_year or movie_data['release_year']
-                link = link or movie_data['link']
 
-            if movie_data is None:
+            if not movie_data:  # Movie not found in OMDb
+                print(f"No movie found with the title '{title}'.")
                 return None
 
-            # Check if the movie already exists in the database
+            # Check if the movie already exists
             existing_movie = (
                 self.db.session.query(Movie)
-                .filter_by(title=title, release_year=release_year)
+                .filter_by(title=title, release_year=movie_data['release_year'])
                 .first()
-                )
-            # Generate imdb link
-            imdb_link = f"https://www.imdb.com/title/{link}"
-            if not existing_movie:
+            )
+            if existing_movie:
+                movie_id = existing_movie.id
+            else:
+                # Create a new movie entry
                 new_movie = Movie(
                     title=title,
-                    director=director,
-                    release_year=release_year,
-                    rating=rating,
-                    poster=poster,
-                    link=imdb_link
+                    director=movie_data['director'],
+                    release_year=movie_data['release_year'],
+                    rating=movie_data['rating'],
+                    poster=movie_data['poster'],
+                    link=f"https://www.imdb.com/title/{movie_data['link']}"
                 )
                 self.db.session.add(new_movie)
                 self.db.session.commit()
                 movie_id = new_movie.id
-            else:
-                movie_id = existing_movie.id
 
+            # Add relationship with the user
             user_movie = UserMovie(user_id=user_id, movie_id=movie_id)
             self.db.session.add(user_movie)
             self.db.session.commit()
 
+            return True  # Success
+
         except SQLAlchemyError as e:
-            print(f"Error: {e}")
+            print(f"Database error: {e}")
             self.db.session.rollback()
+            return None  # Failure
 
     def update_movie(self, movie_id, user_id, rating=None):
         """Update a movie in the database"""
