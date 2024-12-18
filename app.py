@@ -227,16 +227,16 @@ def delete_movie(user_id, movie_id):
         del_movie = data_manager.delete_movie(movie_id, user_id)
 
         if not del_movie:
-            message = f"Movie '{movie_id}' not found."
-            return redirect(f"/users/{user_id}?message={message}")
+            flash(f"Movie '{movie_id}' not found.")
+            return redirect(f"/users/{user_id}")
 
-        message = f"Movie '{del_movie.title}' has been deleted successfully!"
-        return redirect(f"/users/{user_id}?message={message}")
+        flash(f"Movie '{del_movie.title}' has been deleted successfully!")
+        return redirect(f"/users/{user_id}")
 
     except Exception as e:
         print(f"Error: {e}")
-        message = f"Error: {e}"
-        return redirect(f"/users/{user_id}?message={message}")
+        flash(f"Error: {e}")
+        return redirect(f"/users/{user_id}")
 
 
 @app.errorhandler(404)

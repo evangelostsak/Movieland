@@ -81,7 +81,22 @@ class SQLiteDataManager(DataManagerInterface):
             if not del_user:
                 return f" User with ID {user_id} does not exist."
 
-            self.db.session.query(UserMovie).filter(UserMovie.user_id == user_id).delete()
+            # Get all movies associated with the user
+            user_movies = self.db.session.query(UserMovie).filter_by(user_id=user_id).all()
+            movie_ids = [user_movie.movie_id for user_movie in user_movies]
+
+            # delete all UserMovie relationships for this user
+            self.db.session.query(UserMovie).filter_by(user_id=user_id).delete()
+
+            # check if any of the movies are not associated with other users
+            for movie_id in movie_ids:
+                is_movie_linked = self.db.session.query(UserMovie).filter_by(movie_id=movie_id).first()
+                if not is_movie_linked:
+                    # if movie is not linked to any other user
+                    movie = self.db.session.query(Movie).get(movie_id)
+                    if movie:
+                        # delete the movie
+                        self.db.session.delete(movie)
             self.db.session.delete(del_user)
             self.db.session.commit()
             return f"User with ID '{user_id}' and their entries are successfully deleted."
