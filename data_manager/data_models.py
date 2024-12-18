@@ -52,7 +52,7 @@ class Movie(db.Model):
         """Returns a string representation of the Movie model, debugging-friendly"""
         return (f"Movie(id = {self.id}, title = {self.title}, release_year = {self.release_year}, "
                 f"poster = {self.poster}, director = {self.director}, rating = {self.rating}, "
-                f"link = {self.link})")
+                f"link = {self.link}), likes = {self.likes}")
 
 
 class UserMovie(db.Model):
