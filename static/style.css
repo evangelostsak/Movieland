@@ -206,22 +206,13 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-image: url('/static/images/movie-background-collage.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 
-/* Header and Navigation */
-header {
-    background-color: #1f1f1f;
-    color: #fff;
-    text-align: center;
-    padding: 1.5rem 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-header h1 {
-    font-size: 2.5rem;
-    letter-spacing: 1.5px;
-}
-
+/* Navigation */
 nav {
     background-color: #333;
     display: flex;
@@ -382,4 +373,39 @@ footer {
         width: 100%; /* Full-width buttons for mobile */
         font-size: 0.7rem;
     }
+}
+header {
+    position: relative; /* Make header a positioned container */
+    color: #fff;
+    text-align: center;
+    padding: 1.5rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden; /* Ensure content doesn't overflow */
+}
+
+header::before {
+    content: ''; /* Create empty pseudo-element */
+    position: absolute; /* Position it inside the header */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/static/images/movie-background-collage1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(5px); /* Apply the blur effect */
+    z-index: -1; /* Place the pseudo-element behind the content */
+}
+
+.rubik-puddles-regular {
+    font-family: "Rubik Puddles", serif;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+    color: #ffffff; /* Example: white color */
+    margin: 20px 0;
+    font-size: 2.5rem;
+    letter-spacing: 5px;
+    z-index: 1;
 }
