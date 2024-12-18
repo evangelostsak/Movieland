@@ -39,6 +39,7 @@ class Movie(db.Model):
     rating = Column(Float, nullable=False)
     poster = Column(String, nullable=True)
     link = Column(String, nullable=True)
+    likes = Column(Integer, default=0)
 
     # Relationship with UserMovie
     user_movies = relationship('UserMovie', back_populates='movie', cascade='all, delete')

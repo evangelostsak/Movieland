@@ -20,10 +20,14 @@
                     <p><strong>Release Year:</strong> {{ movie.release_year or 'N/A' }}</p>
                     <p><strong>Director:</strong> {{ movie.director or 'N/A' }}</p>
                     <p><strong>Rating:</strong> {{ movie.rating or 'N/A' }}</p>
+                    <p><strong>Likes:</strong> {{ movie.likes or 'N/A' }}</p>
                     {% if movie.link %}
                         <p><a href="{{ movie.link }}" target="_blank" class="btn link-btn">More Info</a></p>
                     {% endif %}
                 </div>
+                <form action="{{ url_for('like_movie', movie_id=movie.id) }}" method="POST">
+                    <button type="submit" class="btn btn-like">Like</button>
+                </form>
 
 
             </div>

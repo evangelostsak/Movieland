@@ -133,7 +133,7 @@ class SQLiteDataManager(DataManagerInterface):
             raise
 
     def add_movie(self, user_id, title, director=None,
-                  release_year=None, rating=None, poster=None, link=None):
+                  release_year=None, rating=None, poster=None, link=None, likes=0):
         """Adds a new movie to the database."""
         try:
             # Fetch movie data from OMDb
@@ -159,7 +159,9 @@ class SQLiteDataManager(DataManagerInterface):
                     release_year=movie_data['release_year'],
                     rating=movie_data['rating'],
                     poster=movie_data['poster'],
-                    link=f"https://www.imdb.com/title/{movie_data['link']}"
+                    link=f"https://www.imdb.com/title/{movie_data['link']}",
+                    likes=likes
+
                 )
                 self.db.session.add(new_movie)
                 self.db.session.commit()
@@ -229,3 +231,20 @@ class SQLiteDataManager(DataManagerInterface):
         except SQLAlchemyError as e:
             print(f"Error: {e}")
             return []
+
+    def like_movie(self, movie_id):
+        """Increments the likes for a specific movie."""
+        try:
+            movie = self.db.session.query(Movie).filter_by(id=movie_id).first()
+            if not movie:
+                return None  # Movie not found
+
+            movie.likes += 1
+            self.db.session.commit()
+
+            return movie  # Return the updated movie object
+
+        except SQLAlchemyError as e:
+            print(f"Error: {e}")
+            self.db.session.rollback()
+            return None

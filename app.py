@@ -1,6 +1,6 @@
 import os
 import sqlalchemy
-from flask import Flask, request, render_template, redirect, flash
+from flask import Flask, request, render_template, redirect, flash, url_for
 from data_manager.SQLite_data_manager import SQLiteDataManager
 from dotenv import load_dotenv
 
@@ -237,6 +237,24 @@ def delete_movie(user_id, movie_id):
         print(f"Error: {e}")
         flash(f"Error: {e}")
         return redirect(f"/users/{user_id}")
+
+
+@app.route('/movies/likes/<int:movie_id>', methods=["POST"])
+def like_movie(movie_id):
+    """Adds liking for a specific movie in general movie list"""
+    try:
+        movie = data_manager.like_movie(movie_id)
+        if not movie:
+            flash("Movie not found!")
+            return redirect(url_for('list_movies'))
+
+        flash(f"Movie '{movie.title}' has been liked!")
+        return redirect(url_for('list_movies', movie_id=movie.id))  # Redirect to the movie details page
+
+    except Exception as e:
+        print(f"Error: {e}")
+        flash("An error occurred while liking the movie.")
+        return redirect(url_for('list_movies'))
 
 
 @app.errorhandler(404)
