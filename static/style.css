@@ -1,11 +1,11 @@
-
 /* User Grid Container */
 .user-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Smaller min size to fit more users */
+    gap: 1rem; /* Compact gap for better fit */
     margin: 2rem 0;
     padding: 1rem;
+    align-items: stretch; /* Ensure cards align properly */
 }
 
 /* User Card */
@@ -14,10 +14,12 @@
     border: 1px solid #333; /* Subtle border */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    padding: 1.5rem;
+    padding: 1rem; /* Compact padding */
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     color: #e0e0e0;
+    max-width: 100%;
+    overflow: hidden; /* Prevent content overflow */
 }
 
 .user-card:hover {
@@ -27,34 +29,37 @@
 
 /* User Name */
 .user-card h2 {
-    font-size: 1.8rem;
+    font-size: 1.2rem; /* Smaller font size for compactness */
     margin-bottom: 0.5rem;
     color: #4CAF50; /* Accent green for user names */
+    word-wrap: break-word;
 }
 
 /* User Details */
 .user-card p {
-    font-size: 1rem;
-    margin: 0.5rem 0;
+    font-size: 0.9rem; /* Compact details */
+    margin: 0.3rem 0;
     color: #aaaaaa; /* Light gray for details */
 }
 
 /* Action Buttons */
 .user-card .actions {
-    margin-top: 1rem;
+    margin-top: 0.8rem;
     display: flex;
     justify-content: center;
-    gap: 0.8rem;
+    gap: 0.5rem; /* Compact spacing between buttons */
+    flex-wrap: wrap; /* Wrap buttons if they overflow */
 }
 
 .user-card .btn {
     display: inline-block;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
+    padding: 0.4rem 0.7rem; /* Compact padding */
+    font-size: 0.8rem; /* Smaller button font size */
     text-decoration: none;
     color: #fff;
     border-radius: 5px;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap; /* Prevent text wrapping inside buttons */
 }
 
 .user-card .delete-btn {
@@ -73,6 +78,7 @@
     transform: scale(1.05);
     filter: brightness(1.2);
 }
+
 /* Movie Grid Layout */
 .movie-grid {
     display: flex;
@@ -322,6 +328,22 @@ footer {
         padding: 1.5rem;
         width: 90%;
     }
+     .user-card {
+        padding: 0.8rem; /* Reduce padding on smaller screens */
+    }
+
+    .user-card h2 {
+        font-size: 1rem; /* Smaller headings */
+    }
+
+    .user-card p {
+        font-size: 0.8rem; /* Smaller details */
+    }
+
+    .user-card .btn {
+        font-size: 0.7rem; /* Reduce button font size for mobile */
+        padding: 0.3rem 0.5rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -346,5 +368,18 @@ footer {
     .form-container .btn {
         font-size: 1rem;
         padding: 0.6rem;
+    }
+    .user-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Even smaller cards on mobile */
+    }
+
+    .user-card .actions {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 0.4rem;
+    }
+
+    .user-card .btn {
+        width: 100%; /* Full-width buttons for mobile */
+        font-size: 0.7rem;
     }
 }
