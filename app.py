@@ -17,10 +17,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize DataManager
 data_manager = SQLiteDataManager(app)
 
-# Table creation, run only once
-# with app.app_context():
-#     data.db.create_all()
-
 
 @app.route("/", methods=["GET"])
 def home():
@@ -174,7 +170,6 @@ def add_movie(user_id):
             return render_template("add_movie.html", user=user_name)
 
         try:
-            # Call add_movie and save results
             result = data_manager.add_movie(user_id, title)
 
             # Check the result of add_movie
