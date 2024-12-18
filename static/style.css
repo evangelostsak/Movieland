@@ -398,6 +398,7 @@ header::before {
     z-index: -1; /* Place the pseudo-element behind the content */
 }
 
+/* copy pasted from google fonts */
 .rubik-puddles-regular {
     font-family: "Rubik Puddles", serif;
     font-weight: 400;
