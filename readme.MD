@@ -111,7 +111,8 @@ Navigate to `http://127.0.0.1:5000` to access the app.
 ---
 
 ## 🌐 Deployment on PythonAnywhere
-
+Try it out until 03/2025:
+http://evangelostsak.pythonanywhere.com/
 1. Upload all files, except `.env`.
 2. Configure environment variables in the WSGI file.
 3. Set up your static and template directories.
