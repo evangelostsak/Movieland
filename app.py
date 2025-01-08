@@ -17,6 +17,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize DataManager
 data_manager = SQLiteDataManager(app)
 
+# Run once to create tables
+# with app.app_context():
+#     data.db.create_all()
+
 
 @app.route("/", methods=["GET"])
 def home():
