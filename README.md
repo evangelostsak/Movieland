@@ -1,4 +1,4 @@
-"""
+
 # 🎥 MovieLand: Your Personal Movie Hub
 
 **MovieLand** is a Flask-based web application where users can explore, manage, and enjoy their personal movie collections. This project combines movie details fetched dynamically from the OMDb API with user management, interactive features like liking movies, and clean, responsive designs.
@@ -78,6 +78,7 @@ FLASK_SECRET_KEY=your_flask_secret_key
 ```
 
 Or, set them manually in your deployment environment.
+#### **Check `example.env` for guidance.**
 
 ---
 
@@ -113,10 +114,6 @@ Navigate to `http://127.0.0.1:5000` to access the app.
 ## 🌐 Deployment on PythonAnywhere
 Try it out until 03/2025:
 http://evangelostsak.pythonanywhere.com/
-1. Upload all files, except `.env`.
-2. Configure environment variables in the WSGI file.
-3. Set up your static and template directories.
-4. Reload your app in the PythonAnywhere dashboard.
 
 ---
 
@@ -174,5 +171,4 @@ Contributions are welcome! Feel free to fork this repository and submit a pull r
 For any inquiries or feedback, please contact: **baggtsak55@gmail.com**
 
 Enjoy exploring **MovieLand**! 🎬✨
-"""
  
