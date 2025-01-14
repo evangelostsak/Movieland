@@ -78,7 +78,7 @@ FLASK_SECRET_KEY=your_flask_secret_key
 ```
 
 Or, set them manually in your deployment environment.
-#### **Check `example.env` for guidance.**
+#### **Check `.env.example` for guidance.**
 
 ---
 
