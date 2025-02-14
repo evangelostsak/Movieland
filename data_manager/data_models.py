@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -12,18 +13,28 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
+    username = Column(String,unique=True, nullable=False)
+    password_hash = Column(String, nullable=False)
+
+    def set_password(self, password):
+        """Hashes and stores the password."""
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        """Checks the hashed password."""
+        return check_password_hash(self.password_hash, password)
+
 
     # Relationship with UserMovie
     user_movies = relationship('UserMovie', back_populates='user', cascade='all, delete')
 
     def __str__(self):
         """ Human-readable presentation of the model user"""
-        return f"{self.id}. {self.name}"
+        return f"{self.id}. {self.username}"
 
     def __repr__(self):
         """Returns a string representation of the User model, debugging-friendly"""
-        return f"User(id = {self.id}, name = {self.name})"
+        return f"User(id = {self.id}, name = {self.username})"
 
 
 class Movie(db.Model):
