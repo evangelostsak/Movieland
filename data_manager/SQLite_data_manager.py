@@ -64,19 +64,17 @@ class SQLiteDataManager(DataManagerInterface):
 
         try:
             existing_user = self.db.session.query(User).filter_by(username=username).first()
-            if not existing_user:
-                hashed_password = User.generate_password_hash(password)
-                new_user = User(username=username, password=hashed_password)
-                self.db.session.add(new_user)
-                self.db.session.commit()
-                return f"User {username} has been successfully created!"
-            else:
-                self.db.session.rollback()
+            if existing_user:
                 return f"User {username} already exists!"
+            new_user = User(username=username)
+            new_user.set_password(password)
+            self.db.session.add(new_user)
+            self.db.session.commit()
 
-        except SQLAlchemyError as e:
+            return f"User {username} has been successfully created!"
+        except Exception as e:
             self.db.session.rollback()
-            return f"Error adding user '{username}': {e}"
+            return f"Error: {str(e)}"
 
     def delete_user(self, user_id):
         """Deletes user and their entries from the database"""
