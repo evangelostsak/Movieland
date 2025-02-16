@@ -61,9 +61,9 @@ class SQLiteDataManager(DataManagerInterface):
 
     def register(self, username, password):
         """Registers new user to database"""
-        existing_user = self.db.session.query(User).filter_by(username=username).first()
 
         try:
+            existing_user = self.db.session.query(User).filter_by(username=username).first()
             if not existing_user:
                 hashed_password = User.generate_password_hash(password)
                 new_user = User(username=username, password=hashed_password)

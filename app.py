@@ -27,6 +27,11 @@ login_manager.login_view = 'login'
 #     data.db.create_all()
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return data_manager.get_user(user_id)
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Add a user in the database"""
@@ -38,7 +43,7 @@ def register():
         return render_template("register.html")
 
     if request.method == "POST":
-        username = request.form.get('name').strip()
+        username = request.form.get('username').strip()
         password = request.form.get('password').strip()
 
         if not username:
@@ -92,6 +97,7 @@ def login():
             print(f"Error: {e}")
             flash("Invalid username or password. Please try again.")
             return render_template("login.html")
+
 
 @app.route('/logout')
 @login_required
