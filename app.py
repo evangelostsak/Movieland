@@ -27,9 +27,57 @@ login_manager.login_view = 'login'
 #     data.db.create_all()
 
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """Add a user in the database"""
+
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
+    if request.method == "GET":
+        return render_template("register.html")
+
+    if request.method == "POST":
+        username = request.form.get('name').strip()
+        password = request.form.get('password').strip()
+
+        if not username:
+            flash("Name is mandatory!")
+            return render_template("register.html")
+        if len(username) < 3:
+            flash("Name must contain at-least 3 characters.")
+            return render_template("register.html")
+        if len(username) > 20:
+            flash("Name cannot have more than 20 characters.")
+            return render_template("register.html")
+        if not password:
+            flash("Password is mandatory!")
+            return render_template("register.html")
+        if len(password) < 6:
+            flash("Password must contain at-least 6 characters.")
+            return render_template("register.html")
+        if len(password) > 20:
+            flash("Password cannot have more than 20 characters.")
+            return render_template("register.html")
+
+        try:
+            data_manager.register(username, password)
+        except Exception as e:
+            flash("Error while adding the user, please try again!")
+            flash(f"Error: {e}")
+            return render_template("register.html")
+
+        flash(f"Account for {username} created successfully!")
+        return redirect(url_for('login'))
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Login route"""
+
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
     if request.method == "POST":
         username = request.form.get('username').strip()
         password = request.form.get('password').strip()
@@ -44,6 +92,12 @@ def login():
             print(f"Error: {e}")
             flash("Invalid username or password. Please try again.")
             return render_template("login.html")
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 
 @app.route("/", methods=["GET"])
@@ -94,47 +148,6 @@ def user_movies(user_id):
     return render_template('user_movies.html', user=user_name, movies=movies)
 
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    """Add a user in the database"""
-
-    if request.method == "GET":
-        return render_template("register.html")
-
-    if request.method == "POST":
-        username = request.form.get('name').strip()
-        password = request.form.get('password').strip()
-
-        if not username:
-            flash("Name is mandatory!")
-            return render_template("register.html")
-        if len(username) < 3:
-            flash("Name must contain at-least 3 characters.")
-            return render_template("register.html")
-        if len(username) > 20:
-            flash("Name cannot have more than 20 characters.")
-            return render_template("register.html")
-        if not password:
-            flash("Password is mandatory!")
-            return render_template("register.html")
-        if len(password) < 6:
-            flash("Password must contain at-least 6 characters.")
-            return render_template("register.html")
-        if len(password) > 20:
-            flash("Password cannot have more than 20 characters.")
-            return render_template("register.html")
-
-        try:
-            data_manager.register(username, password)
-        except Exception as e:
-            flash("Error while adding the user, please try again!")
-            flash(f"Error: {e}")
-            return render_template("register.html")
-
-        flash(f"Account for {username} created successfully!")
-        return redirect(url_for('login'))
-
-
 @app.route("/users/<user_id>/update_user", methods=["GET", "POST"])
 def update_user(user_id):
     """Update a users details"""
@@ -171,6 +184,7 @@ def update_user(user_id):
 
 
 @app.route("/users/<user_id>/delete_user", methods=["GET"])
+@login_required
 def delete_user(user_id):
     """Delete target user from the database"""
     try:
@@ -188,6 +202,7 @@ def delete_user(user_id):
 
 
 @app.route("/users/<user_id>/add_movie", methods=["GET", "POST"])
+@login_required
 def add_movie(user_id):
     """Add movie to a specific user."""
     try:
@@ -227,6 +242,7 @@ def add_movie(user_id):
 
 
 @app.route("/users/<user_id>/update_movie/<movie_id>", methods=["GET", "POST"])
+@login_required
 def update_movie(user_id, movie_id):
     """Updates a movie of a specific user"""
     if request.method == "GET":
@@ -254,6 +270,7 @@ def update_movie(user_id, movie_id):
 
 
 @app.route("/users/<user_id>/delete_movie/<movie_id>", methods=["GET"])
+@login_required
 def delete_movie(user_id, movie_id):
     """Deletes a user's movie"""
     try:
@@ -273,6 +290,7 @@ def delete_movie(user_id, movie_id):
 
 
 @app.route('/movies/likes/<int:movie_id>', methods=["POST"])
+@login_required
 def like_movie(movie_id):
     """Adds liking for a specific movie in general movie list"""
     try:
