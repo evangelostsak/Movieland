@@ -5,3 +5,6 @@ data_manager/__pycache__/
 
 # ignore database for security perposes
 data/movies.sqlite
+
+#ignore TODO files
+TODO.txt
