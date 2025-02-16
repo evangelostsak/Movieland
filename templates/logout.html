@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block pagename %}
+        <h2>Logout</h2>
+        {% endblock %}
+
+{% block content %}
+<div class="form-container">
+
+    <h2>Are you sure you want to logout?</h2>
+    <form action="{{ url_for('logout') }}" method="POST">
+    <br><br>
+    <div class="btn-container-logout">
+    <button type="submit" class="btn"> Logout</button>
+    <a href="{{ url_for('home') }}" class="btn-cancel">Cancel</a>
+    </div>
+    </form>
+
+    </div>
+{% endblock %}
