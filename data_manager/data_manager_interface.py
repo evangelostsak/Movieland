@@ -20,7 +20,7 @@ class DataManagerInterface(ABC):
         pass
 
     @abstractmethod
-    def add_user(self, user):
+    def register(self, username, password):
         pass
 
     @abstractmethod

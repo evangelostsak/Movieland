@@ -59,18 +59,24 @@ class SQLiteDataManager(DataManagerInterface):
             print(f"Error fetching user with ID {user_id}: {e}")
             raise
 
-    def add_user(self, user):
-        """Add new user to database"""
+    def register(self, username, password):
+        """Registers new user to database"""
+        existing_user = self.db.session.query(User).filter_by(username=username).first()
 
         try:
-            new_user = User(name=user)
-            self.db.session.add(new_user)
-            self.db.session.commit()
-            return f"User {user} has been successfully added!"
+            if not existing_user:
+                hashed_password = User.generate_password_hash(password)
+                new_user = User(username=username, password=hashed_password)
+                self.db.session.add(new_user)
+                self.db.session.commit()
+                return f"User {username} has been successfully created!"
+            else:
+                self.db.session.rollback()
+                return f"User {username} already exists!"
 
         except SQLAlchemyError as e:
             self.db.session.rollback()
-            return f"Error adding user '{user}': {e}"
+            return f"Error adding user '{username}': {e}"
 
     def delete_user(self, user_id):
         """Deletes user and their entries from the database"""
@@ -247,4 +253,25 @@ class SQLiteDataManager(DataManagerInterface):
         except SQLAlchemyError as e:
             print(f"Error: {e}")
             self.db.session.rollback()
+            return None
+        
+    def get_user_by_username(self, username):
+        """Get a user by their username"""
+
+        try:
+            user = self.db.session.query(User).filter_by(username=username).first()
+            return user
+        except SQLAlchemyError as e:
+            print(f"Error: {e}")
+            return None
+        
+    def authenticate_user(self, username, password):
+        """Authenticate user with username and password"""
+
+        try:
+            user = self.get_user_by_username(username)
+            if user and User.check_password_hash(user.password, password):
+                return user
+        except SQLAlchemyError as e:
+            print(f"Error: {e}")
             return None

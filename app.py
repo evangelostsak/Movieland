@@ -3,6 +3,7 @@ import sqlalchemy
 from flask import Flask, request, render_template, redirect, flash, url_for
 from data_manager.SQLite_data_manager import SQLiteDataManager
 from dotenv import load_dotenv
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 load_dotenv()
 
@@ -17,9 +18,32 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize DataManager
 data_manager = SQLiteDataManager(app)
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 # Run once to create tables
 # with app.app_context():
 #     data.db.create_all()
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Login route"""
+    if request.method == "POST":
+        username = request.form.get('username').strip()
+        password = request.form.get('password').strip()
+
+        try:
+            user = data_manager.authenticate_user(username=username, password=password)
+            login_user(user)
+            flash(f"Welcome back, {user.username}!")
+            return redirect(url_for('home'))
+        
+        except Exception as e:
+            print(f"Error: {e}")
+            flash("Invalid username or password. Please try again.")
+            return render_template("login.html")
 
 
 @app.route("/", methods=["GET"])
@@ -70,35 +94,45 @@ def user_movies(user_id):
     return render_template('user_movies.html', user=user_name, movies=movies)
 
 
-@app.route("/add_user", methods=["GET", "POST"])
-def add_user():
+@app.route("/register", methods=["GET", "POST"])
+def register():
     """Add a user in the database"""
 
     if request.method == "GET":
-        return render_template("add_user.html")
+        return render_template("register.html")
 
     if request.method == "POST":
-        name = request.form.get('name').strip()
+        username = request.form.get('name').strip()
+        password = request.form.get('password').strip()
 
-        if not name:
+        if not username:
             flash("Name is mandatory!")
-            return render_template("add_user.html")
-        if len(name) < 3:
+            return render_template("register.html")
+        if len(username) < 3:
             flash("Name must contain at-least 3 characters.")
-            return render_template("add_user.html")
-        if len(name) > 20:
+            return render_template("register.html")
+        if len(username) > 20:
             flash("Name cannot have more than 20 characters.")
-            return render_template("add_user.html")
+            return render_template("register.html")
+        if not password:
+            flash("Password is mandatory!")
+            return render_template("register.html")
+        if len(password) < 6:
+            flash("Password must contain at-least 6 characters.")
+            return render_template("register.html")
+        if len(password) > 20:
+            flash("Password cannot have more than 20 characters.")
+            return render_template("register.html")
 
         try:
-            data_manager.add_user(name)
+            data_manager.register(username, password)
         except Exception as e:
             flash("Error while adding the user, please try again!")
             flash(f"Error: {e}")
-            return render_template("add_user.html")
+            return render_template("register.html")
 
-        flash(f"User {name} has been added successfully!")
-        return render_template("add_user.html")
+        flash(f"Account for {username} created successfully!")
+        return redirect(url_for('login'))
 
 
 @app.route("/users/<user_id>/update_user", methods=["GET", "POST"])

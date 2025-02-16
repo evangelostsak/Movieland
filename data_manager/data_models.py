@@ -2,11 +2,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+
 
 db = SQLAlchemy()
 
 
-class User(db.Model):
+class User(UserMixin,db.Model):
     """
     Model for Users
     """
