@@ -83,16 +83,17 @@ def login():
         username = request.form.get('username').strip()
         password = request.form.get('password').strip()
 
-        try:
-            user = data_manager.authenticate_user(username=username, password=password)
+        user = data_manager.authenticate_user(username=username, password=password)
+
+        if user: # Only authenticated user can login
             login_user(user)
             flash(f"Welcome back, {user.username}!")
             return redirect(url_for('home'))
         
-        except Exception as e:
-            print(f"Error: {e}")
+        else:
             flash("Invalid username or password. Please try again.")
-            return render_template("login.html")
+
+    return render_template("login.html")
 
 
 @app.route('/logout')

@@ -268,8 +268,9 @@ class SQLiteDataManager(DataManagerInterface):
 
         try:
             user = self.get_user_by_username(username)
-            if user and User.check_password_hash(user.password, password):
+            if user and user.check_password(password):
                 return user
         except SQLAlchemyError as e:
             print(f"Error: {e}")
-            return None
+            
+        return None
