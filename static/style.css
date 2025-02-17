@@ -268,7 +268,8 @@ nav a:hover {
     color: #f0f0f0;
 }
 
-.form-container input[type="text"] {
+.form-container input[type="text"],
+.form-container input[type="password"] {    
     width: 90%;
     padding: 0.75rem;
     margin-bottom: 1.5rem;
@@ -280,7 +281,8 @@ nav a:hover {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.form-container input[type="text"]:focus {
+.form-container input[type="text"]:focus, 
+.form-container input[type="password"]:focus {
     border-color: #4CAF50;
     outline: none;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.8);
