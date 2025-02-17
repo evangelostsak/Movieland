@@ -135,8 +135,13 @@ def list_movies():
 
 
 @app.route("/users/<user_id>", methods=["GET"])
+@login_required
 def user_movies(user_id):
     """Displaying list of movies of a user"""
+
+    if int(current_user.id) != int(user_id):
+        flash("You can only see your own Movies.")
+        return redirect(url_for("home"))
     try:
         user_name = data_manager.get_user(user_id)
         if not user_name:
@@ -212,7 +217,12 @@ def delete_user(user_id):
 @app.route("/users/<user_id>/add_movie", methods=["GET", "POST"])
 @login_required
 def add_movie(user_id):
-    """Add movie to a specific user."""
+    """Logged in user can add movies to their account."""
+
+    if int(current_user.id) != int(user_id):
+        flash("You can only add movies to your own profile.")
+        return redirect(url_for("home"))
+    
     try:
         # Fetch user details for display or validation
         user_name = data_manager.get_user(user_id)
