@@ -158,12 +158,17 @@ def user_movies(user_id):
         print(f"Error fetching movies for user {user_id}: {e}")
         movies = []
 
-    return render_template('user_movies.html', user=user_name, movies=movies)
+    return render_template('profile.html', user=user_name, movies=movies)
 
 
 @app.route("/users/<user_id>/update_user", methods=["GET", "POST"])
+@login_required
 def update_user(user_id):
     """Update a users details"""
+
+    if int(current_user.id) != int(user_id):
+        flash("You can only update your own profile.")
+        return redirect(url_for("home"))
     if request.method == "GET":
         try:
             user = data_manager.get_user(user_id)
@@ -200,6 +205,10 @@ def update_user(user_id):
 @login_required
 def delete_user(user_id):
     """Delete target user from the database"""
+
+    if int(current_user.id) != int(user_id):
+        flash("You can only delete your own profile.")
+        return redirect(url_for("home"))
     try:
         del_user = data_manager.delete_user(user_id)
         if not del_user:

@@ -128,6 +128,66 @@
     padding: 10px;
 }
 
+/* User Actions Container */
+.user-actions-container {
+    background-color: #252525; /* Dark background to match user card */
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: #e0e0e0;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Action Titles */
+.user-actions-container h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #4CAF50; /* Accent color */
+}
+
+/* Action Buttons */
+.user-actions-container .btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+    margin: 0.5rem 0;
+    width: 80%;
+}
+
+/* Delete Button */
+.user-actions-container .delete-btn {
+    background-color: #d9534f;
+}
+
+.user-actions-container .delete-btn:hover {
+    background-color: #bd2130;
+    transform: scale(1.05);
+}
+
+/* Update Button */
+.user-actions-container .update-btn {
+    background-color: #f0ad4e;
+}
+
+.user-actions-container .update-btn:hover {
+    background-color: #d98c3c;
+    transform: scale(1.05);
+}
+
+.h1-movies-profile {
+    text-align: center;
+    font-size: 2.5rem;
+    letter-spacing: 5px;
+}
 /* buttons */
 .btn {
     display: inline-block;

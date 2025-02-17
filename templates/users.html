@@ -8,11 +8,6 @@
             <div class="card user-card">
                 <h2>{{ user.username }}</h2>
                 <p><strong>ID:</strong> {{ user.id }}</p>
-                <div class="actions">
-                    <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn delete-btn">Delete</a>
-                    <a href="{{ url_for('update_user', user_id=user.id) }}" class="btn update-btn">Update</a>
-                    <a href="{{ url_for('user_movies', user_id=user.id) }}" class="btn view-btn">View Movies</a>
-                </div>
             </div>
         {% endfor %}
     </div>
