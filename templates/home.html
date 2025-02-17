@@ -5,7 +5,11 @@
 {% endblock %}
 
 {% block content %}
+    {% if current_user.is_authenticated %}
+    <h2 class="h2_home">Welcome to MovieLand, {{current_user.username}}!</h2>
+    {% else %}
     <h2 class="h2_home">Welcome to MovieLand!</h2>
+    {% endif %}
 <div class="content_home">
     <p>Your personal movie hub for exploring, managing, and enjoying films.</p>
     <p>Here, you can:</p>
