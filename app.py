@@ -1,6 +1,6 @@
 import os
 import sqlalchemy
-from flask import Flask, request, render_template, redirect, flash, url_for
+from flask import Flask, request, render_template, redirect, flash, url_for, session
 from data_manager.SQLite_data_manager import SQLiteDataManager
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -25,7 +25,8 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return data_manager.get_user(user_id)
+    user = data_manager.get_user(user_id)
+    return user
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -42,34 +43,38 @@ def register():
         username = request.form.get('username').strip()
         password = request.form.get('password').strip()
 
-        if not username:
-            flash("Name is mandatory!")
-            return render_template("register.html")
-        if len(username) < 3:
-            flash("Name must contain at-least 3 characters.")
-            return render_template("register.html")
-        if len(username) > 20:
-            flash("Name cannot have more than 20 characters.")
-            return render_template("register.html")
-        if not password:
-            flash("Password is mandatory!")
-            return render_template("register.html")
-        if len(password) < 6:
-            flash("Password must contain at-least 6 characters.")
-            return render_template("register.html")
-        if len(password) > 20:
-            flash("Password cannot have more than 20 characters.")
-            return render_template("register.html")
+    if not username:
+        flash("Name is mandatory!")
+        return render_template("register.html")
+    if len(username) < 3:
+        flash("Name must contain at-least 3 characters.")
+        return render_template("register.html")
+    if len(username) > 20:
+        flash("Name cannot have more than 20 characters.")
+        return render_template("register.html")
+    if not password:
+        flash("Password is mandatory!")
+        return render_template("register.html")
+    if len(password) < 6:
+        flash("Password must contain at-least 6 characters.")
+        return render_template("register.html")
+    if len(password) > 20:
+        flash("Password cannot have more than 20 characters.")
+        return render_template("register.html")
 
-        try:
-            data_manager.register(username, password)
-        except Exception as e:
-            flash("Error while adding the user, please try again!")
-            flash(f"Error: {e}")
+    try:
+        message = data_manager.register(username, password)
+        if "already exists" in message:
+            flash(f"{message}")
             return render_template("register.html")
-
+        
         flash(f"Account for {username} created successfully!")
         return redirect(url_for('login'))
+    
+    except Exception as e:
+        flash("Error while adding the user, please try again!")
+        flash(f"Error: {e}")
+        return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -118,9 +123,6 @@ def home():
 def list_users():
     """Display all users in the database"""
     users = data_manager.get_all_users()
-    message = request.args.get('message')
-    if message:
-        flash(message)
     return render_template("users.html", users=users)
 
 
@@ -210,17 +212,19 @@ def delete_user(user_id):
         flash("You can only delete your own profile.")
         return redirect(url_for("home"))
     try:
+        user_id = current_user.id
         del_user = data_manager.delete_user(user_id)
         if not del_user:
-            message = f"User with ID {user_id} couldn't be found."
-            return redirect(f'/users?=message={message}')
-        # message = f"User {del_user} has been deleted successfully!"
-        return redirect(f'/users?message={del_user}')
+            flash(f"User with ID {user_id} couldn't be found.")
+            return redirect('home')
+        flash(f"User '{user_id}' has been deleted successfully!")
+        logout_user()
+        return redirect(url_for("login"))
 
     except Exception as e:
         print(f"Error deleting user: {e}")
-        message = "An error occurred while deleting the user. Please try again."
-        return redirect(f'/users?message={message}')
+        flash("An error occurred while deleting the user. Please try again.")
+        return redirect(url_for("home"))
 
 
 @app.route("/users/<user_id>/add_movie", methods=["GET", "POST"])

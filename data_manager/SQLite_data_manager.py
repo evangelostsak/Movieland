@@ -49,15 +49,15 @@ class SQLiteDataManager(DataManagerInterface):
 
     def get_user(self, user_id):
         """Get a user by ID"""
+        if not user_id:
+            return None  # If user_id is None, return None immediately
 
         try:
-            user = self.db.session.query(User).filter(User.id == user_id).one_or_none()
-            if not user:
-                raise ValueError(f"No user found with ID {user_id}")
-            return user
+            user = self.db.session.get(User, user_id)
+            return user 
         except SQLAlchemyError as e:
-            print(f"Error fetching user with ID {user_id}: {e}")
-            raise
+            print(f"Database error while fetching user with ID {user_id}: {e}")
+            return None 
 
     def register(self, username, password):
         """Registers new user to database"""
@@ -272,5 +272,4 @@ class SQLiteDataManager(DataManagerInterface):
                 return user
         except SQLAlchemyError as e:
             print(f"Error: {e}")
-            
         return None
