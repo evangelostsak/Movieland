@@ -117,7 +117,7 @@ class SQLiteDataManager(DataManagerInterface):
             update_user = self.get_user(user_id)
             if not update_user:
                 return f" User with ID {user_id} does not exist."
-            update_user.name = user_name
+            update_user.username = user_name
             self.db.session.commit()
             return f"User '{user_name}' was updated successfully."
 

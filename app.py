@@ -189,7 +189,7 @@ def update_user(user_id):
             return render_template('update_user.html', user=user, user_id=user_id)
         try:
             # Update user details
-            data_manager.update_user(user_id=user_id, user_name=user_name)
+            message = data_manager.update_user(user_id=user_id, user_name=user_name)
             user = data_manager.get_user(user_id)
         except Exception as e:
             flash(f"Error updating user: {e}")
@@ -199,7 +199,7 @@ def update_user(user_id):
                 return redirect('/404')
             return render_template('update_user.html', user=user, user_id=user_id)
 
-        flash(f"User {user_name} has been updated successfully!")
+        flash(f"{message}")
         return render_template("update_user.html", user=user, user_id=user_id)
 
 
