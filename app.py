@@ -145,12 +145,10 @@ def user_movies(user_id):
     if int(current_user.id) != int(user_id):
         flash("You can only see your own Movies.")
         return redirect(url_for("home"))
-    try:
-        user_name = data_manager.get_user(user_id)
-        if not user_name:
-            return redirect('/404')
-    except sqlalchemy.exc.NoResultFound:
-        return redirect('/404')
+
+    user_name = data_manager.get_user(user_id)
+    if not user_name:
+        raise NotFound
 
     try:
         movies = data_manager.get_user_movies(user_id)
@@ -196,10 +194,10 @@ def update_user(user_id):
             return render_template('update_user.html', user=user, user_id=user_id)
 
         flash(f"{message}")
-        return render_template("update_user.html", user=user, user_id=user_id)
+        return render_template("profile.html", user=user, user_id=user_id)
 
 
-@app.route("/users/<user_id>/delete_user", methods=["GET"])
+@app.route("/users/<user_id>/delete_user", methods=["GET", "POST"])
 @login_required
 def delete_user(user_id):
     """Delete target user from the database"""
@@ -207,20 +205,30 @@ def delete_user(user_id):
     if int(current_user.id) != int(user_id):
         flash("You can only delete your own profile.")
         return redirect(url_for("home"))
-    try:
-        user_id = current_user.id
-        del_user = data_manager.delete_user(user_id)
-        if not del_user:
-            flash(f"User with ID {user_id} couldn't be found.")
-            return redirect('home')
-        flash(f"User '{user_id}' has been deleted successfully!")
-        logout_user()
-        return redirect(url_for("login"))
+    
+    user = data_manager.get_user(user_id)
+    if not user:
+        raise NotFound
+    
+    if request.method == "GET":
+        return render_template("delete_user.html", user=user, user_id=user_id)
+    
+    if request.method == "POST":
 
-    except Exception as e:
-        print(f"Error deleting user: {e}")
-        flash("An error occurred while deleting the user. Please try again.")
-        return redirect(url_for("home"))
+        try:
+            user_id = current_user.id
+            del_user = data_manager.delete_user(user_id)
+            if not del_user:
+                flash(f"User with ID {user_id} couldn't be found.")
+                return redirect('home')
+            flash(f"User '{user_id}' has been deleted successfully!")
+            logout_user()
+            return redirect(url_for("login"))
+
+        except Exception as e:
+            print(f"Error deleting user: {e}")
+            flash("An error occurred while deleting the user. Please try again.")
+            return redirect(url_for("home"))
 
 
 @app.route("/users/<user_id>/add_movie", methods=["GET", "POST"])

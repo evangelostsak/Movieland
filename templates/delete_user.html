@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block pagename %}
+        <h2>Delete Account</h2>
+        {% endblock %}
+
+{% block content %}
+<div class="form-container">
+
+    <h2>Are you sure you want to delete your account?</h2>
+    <form action="{{ url_for('delete_user', user_id=user.id)}}" method="POST">
+    <br><br>
+    <div class="btn-container-logout">
+    <button type="submit" class="btn"> Delete Account</button>
+    <a href="{{ url_for('user_movies', user_id=current_user.id) }}" class="btn-cancel">Cancel</a>
+    </div>
+    </form>
+
+    </div>
+{% endblock %}
