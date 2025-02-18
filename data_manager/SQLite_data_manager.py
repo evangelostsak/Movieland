@@ -71,7 +71,7 @@ class SQLiteDataManager(DataManagerInterface):
             self.db.session.add(new_user)
             self.db.session.commit()
 
-            return f"User {username} has been successfully created!"
+            return f"Account for {username} has been created successfully!"
         except Exception as e:
             self.db.session.rollback()
             return f"Error: {str(e)}"

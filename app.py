@@ -68,7 +68,7 @@ def register():
             flash(f"{message}")
             return render_template("register.html")
         
-        flash(f"Account for {username} created successfully!")
+        flash(f"{message}")
         return redirect(url_for('login'))
     
     except Exception as e:
