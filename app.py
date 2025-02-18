@@ -4,6 +4,7 @@ from flask import Flask, request, render_template, redirect, flash, url_for, ses
 from data_manager.SQLite_data_manager import SQLiteDataManager
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from werkzeug.exceptions import NotFound
 
 load_dotenv()
 
@@ -171,32 +172,27 @@ def update_user(user_id):
     if int(current_user.id) != int(user_id):
         flash("You can only update your own profile.")
         return redirect(url_for("home"))
+    
+    user = data_manager.get_user(user_id)
+    if not user:
+        raise NotFound
+    
     if request.method == "GET":
-        try:
-            user = data_manager.get_user(user_id)
-        except sqlalchemy.exc.NoResultFound:
-            return redirect('/404')
         return render_template("update_user.html", user=user, user_id=user_id)
 
     if request.method == "POST":
+
         user_name = request.form.get("name").strip()
         if not user_name:
             flash("Username can't be empty.")
-            try:
-                user = data_manager.get_user(user_id)
-            except sqlalchemy.exc.NoResultFound:
-                return redirect('/404')
             return render_template('update_user.html', user=user, user_id=user_id)
+        
         try:
             # Update user details
             message = data_manager.update_user(user_id=user_id, user_name=user_name)
             user = data_manager.get_user(user_id)
         except Exception as e:
             flash(f"Error updating user: {e}")
-            try:
-                user = data_manager.get_user(user_id)
-            except sqlalchemy.exc.NoResultFound:
-                return redirect('/404')
             return render_template('update_user.html', user=user, user_id=user_id)
 
         flash(f"{message}")
@@ -236,11 +232,11 @@ def add_movie(user_id):
         flash("You can only add movies to your own profile.")
         return redirect(url_for("home"))
     
-    try:
-        # Fetch user details for display or validation
-        user_name = data_manager.get_user(user_id)
-    except sqlalchemy.exc.NoResultFound:
-        return redirect('/404')
+    # Fetch user details for display or validation
+    user_name = data_manager.get_user(user_id)
+
+    if not user_name:
+        raise NotFound
 
     if request.method == "GET":
         return render_template("add_movie.html", user=user_name)
@@ -262,12 +258,10 @@ def add_movie(user_id):
                 return render_template("add_movie.html", user=user_name)
 
         except Exception as e:
-            # Log and display any unexpected errors
             print(f"Error: {e}")
             flash("An error occurred while adding the movie. Please try again.")
             return render_template("add_movie.html", user=user_name)
 
-        # Success case: movie added
         flash(f"Movie '{title}' has been added successfully.")
         return render_template("add_movie.html", user=user_name)
 
@@ -280,7 +274,7 @@ def update_movie(user_id, movie_id):
         try:
             movie = data_manager.get_movie(movie_id)
         except sqlalchemy.exc.NoResultFound:
-            return redirect('/404')
+            return redirect(url_for('404'))
         return render_template('update_movie.html', movie=movie, user_id=user_id)
 
     if request.method == "POST":
@@ -340,13 +334,13 @@ def like_movie(movie_id):
 
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(e):
     """404 Error handling route"""
     return render_template('404.html'), 404
 
 
 @app.errorhandler(500)
-def network_error():
+def network_error(e):
     """500 error handling route"""
     return render_template("500.html"), 500
 
