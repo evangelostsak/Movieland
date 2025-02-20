@@ -194,7 +194,7 @@ def update_user(user_id):
             return render_template('update_user.html', user=user, user_id=user_id)
 
         flash(f"{message}")
-        return render_template("profile.html", user=user, user_id=user_id)
+        return redirect(f"/users/{user_id}")
 
 
 @app.route("/users/<user_id>/delete_user", methods=["GET", "POST"])
@@ -271,7 +271,7 @@ def add_movie(user_id):
             return render_template("add_movie.html", user=user_name)
 
         flash(f"Movie '{title}' has been added successfully.")
-        return render_template("add_movie.html", user=user_name)
+        return redirect(f"/users/{user_id}")
 
 
 @app.route("/users/<user_id>/update_movie/<movie_id>", methods=["GET", "POST"])
@@ -279,10 +279,10 @@ def add_movie(user_id):
 def update_movie(user_id, movie_id):
     """Updates a movie of a specific user"""
     if request.method == "GET":
-        try:
-            movie = data_manager.get_movie(movie_id)
-        except sqlalchemy.exc.NoResultFound:
-            return redirect(url_for('404'))
+
+        movie = data_manager.get_movie(movie_id)
+        if not movie:
+            return NotFound
         return render_template('update_movie.html', movie=movie, user_id=user_id)
 
     if request.method == "POST":
@@ -298,8 +298,7 @@ def update_movie(user_id, movie_id):
                                    user_id=user_id)
 
         flash(f"Movie '{movie.title}' has been updated successfully!")
-        return render_template('update_movie.html', movie=data_manager.get_movie(movie_id),
-                               user_id=user_id)
+        return redirect(f"/users/{user_id}")
 
 
 @app.route("/users/<user_id>/delete_movie/<movie_id>", methods=["GET"])
@@ -354,4 +353,4 @@ def network_error(e):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5002, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
