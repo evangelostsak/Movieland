@@ -34,6 +34,7 @@ data_manager = SQLiteDataManager(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+login_manager.login_message_category = "error"
 
 
 @login_manager.user_loader
@@ -78,17 +79,17 @@ def register():
     try:
         message = data_manager.register(username, password)
         if "already exists" in message:
-            flash(f"{message}")
+            flash(f"{message}", "error")
             logger.warning(f"Registration failed: {message}")
             return render_template("register.html")
         
-        flash(f"{message}")
+        flash(f"{message}", "error")
         logger.info(f"New user registered: {username}")
         return redirect(url_for('login'))
     
     except Exception as e:
         logger.error(f"Error during registration: {e}")
-        flash("Error while adding the user, please try again!")
+        flash("Error while adding the user, please try again!", "error")
         return render_template("register.html")
 
 
@@ -107,12 +108,12 @@ def login():
 
         if user: # Only authenticated user can login
             login_user(user)
-            flash(f"Welcome back, {user.username}!")
+            flash(f"Welcome back, {user.username}!", "success")
             logger.info(f"User logged in: {user.username}")
             return redirect(url_for('home'))
         
         else:
-            flash("Invalid username or password. Please try again.")
+            flash("Invalid username or password. Please try again.", "error")
             logger.warning("Failed login attempt.")
 
     return render_template("login.html")
@@ -126,7 +127,7 @@ def logout():
     user = data_manager.get_user(current_user.id)
     if request.method == "POST":
         logout_user()
-        flash("You have been logged out.")
+        flash("You have been logged out.", "success")
         logger.info(f"User logged out: {user.username}")
         return redirect(url_for('login'))
 
@@ -162,7 +163,7 @@ def user_movies(user_id):
     """Displaying list of movies of a user"""
 
     if int(current_user.id) != int(user_id):
-        flash("You can only see your own Movies.")
+        flash("You can only see your own Movies.", "error")
         return redirect(url_for("home"))
 
     user_name = data_manager.get_user(user_id)
@@ -175,7 +176,8 @@ def user_movies(user_id):
         if message:
             flash(message)
     except Exception as e:
-        print(f"Error fetching movies for user {user_id}: {e}")
+        logger.error(f"Error fetching user movies: {e}")
+        flash("Error loading your profile {user_name.username}. Please try again.", "error")
         movies = []
 
     return render_template('profile.html', user=user_name, movies=movies)
@@ -187,7 +189,7 @@ def update_user(user_id):
     """Update a users details"""
 
     if int(current_user.id) != int(user_id):
-        flash("You can only update your own profile.")
+        flash("You can only update your own profile.", "error")
         return redirect(url_for("home"))
     
     user = data_manager.get_user(user_id)
@@ -201,7 +203,7 @@ def update_user(user_id):
 
         user_name = request.form.get("name").strip()
         if not user_name:
-            flash("Username can't be empty.")
+            flash("Username can't be empty.", "error")
             return render_template('update_user.html', user=user, user_id=user_id)
         
         try:
@@ -209,11 +211,11 @@ def update_user(user_id):
             message = data_manager.update_user(user_id=user_id, user_name=user_name)
             user = data_manager.get_user(user_id)
         except Exception as e:
-            flash(f"Error updating user, try that again!")
+            flash(f"Error updating user, try that again!", "error")
             logger.error(f"Error updating user: {e}")
             return render_template('update_user.html', user=user, user_id=user_id)
 
-        flash(f"{message}")
+        flash(f"{message}", "success")
         logger.info(f"User details updated: {user.username}")
         return redirect(f"/users/{user_id}")
 
@@ -224,7 +226,7 @@ def delete_user(user_id):
     """Delete target user from the database"""
 
     if int(current_user.id) != int(user_id):
-        flash("You can only delete your own profile.")
+        flash("You can only delete your own profile.", "error")
         return redirect(url_for("home"))
     
     user = data_manager.get_user(user_id)
@@ -240,16 +242,16 @@ def delete_user(user_id):
             user_id = current_user.id
             del_user = data_manager.delete_user(user_id)
             if not del_user:
-                flash(f"User with ID {user_id} couldn't be found.")
+                flash(f"User with ID {user_id} couldn't be found.", "error")
                 return redirect('home')
-            flash(f"User '{user_id}' has been deleted successfully!")
+            flash(f"User '{user_id}' has been deleted successfully!", "success")
             logout_user()
             logger.info(f"User '{user.username}' has been deleted.")
             return redirect(url_for("login"))
 
         except Exception as e:
             logger.error(f"Error deleting user: {e}")
-            flash("An error occurred while deleting the user. Please try again.")
+            flash("An error occurred while deleting the user. Please try again.", "error")
             return redirect(url_for("home"))
 
 
@@ -259,7 +261,7 @@ def add_movie(user_id):
     """Logged in user can add movies to their account."""
 
     if int(current_user.id) != int(user_id):
-        flash("You can only add movies to your own profile.")
+        flash("You can only add movies to your own profile.", "error")
         return redirect(url_for("home"))
     
     # Fetch user details for display or validation
@@ -276,7 +278,7 @@ def add_movie(user_id):
 
         # Validate input
         if not title:
-            flash("Title is required.")
+            flash("Title is required.", "error")
             return render_template("add_movie.html", user=user)
 
         try:
@@ -284,15 +286,15 @@ def add_movie(user_id):
 
             # Check the result of add_movie
             if result is None:  # Movie not found or failed to add
-                flash(f"Movie '{title}' doesn't exist. Make sure the title is correct.")
+                flash(f"Movie '{title}' doesn't exist. Make sure the title is correct.", "error")
                 return render_template("add_movie.html", user=user)
 
         except Exception as e:
             logger.error(f"Error adding movie: {e}")
-            flash("An error occurred while adding the movie. Please try again.")
+            flash("An error occurred while adding the movie. Please try again.", "error")
             return render_template("add_movie.html", user=user)
 
-        flash(f"Movie '{title}' has been added successfully.")
+        flash(f"Movie '{title}' has been added successfully.", "success")
         logger.info(f"Movie '{title}' has been added by {user.username}")
         return redirect(f"/users/{user_id}")
 
@@ -303,7 +305,7 @@ def update_movie(user_id, movie_id):
     """Updates a movie of a specific user"""
 
     if int(current_user.id) != int(user_id):
-        flash("You can only add movies to your own profile.")
+        flash("You can only add movies to your own profile.", "error")
         return redirect(url_for("home"))
     
     user = data_manager.get_user(user_id)
@@ -323,11 +325,11 @@ def update_movie(user_id, movie_id):
             data_manager.update_movie(movie_id=movie_id, user_id=user_id, rating=personal_rating)
         except Exception as e:
             logger.error(f"Error updating movie: {e}")
-            flash("Error while updating movie. Try again!")
+            flash("Error while updating movie. Try again!", "error")
             return render_template('update_movie.html', movie=data_manager.get_movie(movie_id),
                                    user_id=user_id)
 
-        flash(f"Movie '{movie.title}' has been updated successfully!")
+        flash(f"Movie '{movie.title}' has been updated successfully!", "success")
         logger.info(f"Movie '{movie.title}' has been updated by {user.username}")
         return redirect(f"/users/{user_id}")
 
@@ -345,13 +347,13 @@ def delete_movie(user_id, movie_id):
             flash(f"Movie '{movie_id}' not found.")
             return redirect(f"/users/{user_id}")
 
-        flash(f"Movie '{del_movie.title}' has been deleted successfully!")
+        flash(f"Movie '{del_movie.title}' has been deleted successfully!", "success")
         logger.info(f"Movie '{del_movie.title}' has been deleted by {user.username}")
         return redirect(f"/users/{user_id}")
 
     except Exception as e:
         logger.error(f"Error deleting movie: {e}")
-        flash(f"Error: {e}")
+        flash(f"""An error occurred while deleting the movie. Please try again.""", "error")
         return redirect(f"/users/{user_id}")
 
 
@@ -362,16 +364,16 @@ def like_movie(movie_id):
     try:
         movie = data_manager.like_movie(movie_id)
         if not movie:
-            flash("Movie not found!")
+            flash("Movie not found!", "error")
             return redirect(url_for('list_movies'))
 
-        flash(f"Movie '{movie.title}' has been liked!")
+        flash(f"Movie '{movie.title}' has been liked!", "success")
         logger.info(f"Movie '{movie.title}' has been liked by {current_user.username}")
         return redirect(url_for('list_movies', movie_id=movie.id))  # Redirect to the movie details page
 
     except Exception as e:
         logger.error(f"Error liking movie: {e}")
-        flash("An error occurred while liking the movie.")
+        flash("An error occurred while liking the movie.", "error")
         return redirect(url_for('list_movies'))
 
 

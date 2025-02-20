@@ -31,13 +31,13 @@
         {% endif %}
     </nav>
     <div class="container">
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages|length > 0 %}
-            <div class="flash-messages">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
+        {% for category, message in messages %}
+            <div class="flash-messages flash-{{ category }}">
+                <p>{{ message }}</p>
             </div>
+        {% endfor %}
         {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}

@@ -267,15 +267,27 @@
     transform: scale(1.05);
 }
 
-/* Flash messages css */
+/* Flash messages base */
 .flash-messages {
     margin: 1rem 0;
     padding: 1rem;
-    background-color: #ffdfdf;
-    border: 1px solid #ff8888;
     border-radius: 5px;
     font-weight: bold;
+    text-align: center;
+}
+
+/* Error messages */
+.flash-error {
+    background-color: #ffdfdf;
+    border: 1px solid #ff8888;
     color: #d9534f;
+}
+
+/* Success messages */
+.flash-success {
+    background-color: #d4edda;
+    border: 1px solid #155724;
+    color: #155724;
 }
 
 /* General Layout */
