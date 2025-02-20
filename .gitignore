@@ -8,3 +8,6 @@ data/movies.sqlite
 
 #ignore TODO files
 TODO.txt
+
+#ignore log files
+logs/app.log

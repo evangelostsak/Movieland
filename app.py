@@ -1,5 +1,6 @@
 import os
 import sqlalchemy
+import logging
 from flask import Flask, request, render_template, redirect, flash, url_for, session
 from data_manager.SQLite_data_manager import SQLiteDataManager
 from dotenv import load_dotenv
@@ -7,6 +8,17 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from werkzeug.exceptions import NotFound
 
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("logs/app.log"),  # Log to a file
+        logging.StreamHandler()  # Log to console
+    ]
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
@@ -67,14 +79,16 @@ def register():
         message = data_manager.register(username, password)
         if "already exists" in message:
             flash(f"{message}")
+            logger.warning(f"Registration failed: {message}")
             return render_template("register.html")
         
         flash(f"{message}")
+        logger.info(f"New user registered: {username}")
         return redirect(url_for('login'))
     
     except Exception as e:
+        logger.error(f"Error during registration: {e}")
         flash("Error while adding the user, please try again!")
-        flash(f"Error: {e}")
         return render_template("register.html")
 
 
@@ -94,10 +108,12 @@ def login():
         if user: # Only authenticated user can login
             login_user(user)
             flash(f"Welcome back, {user.username}!")
+            logger.info(f"User logged in: {user.username}")
             return redirect(url_for('home'))
         
         else:
             flash("Invalid username or password. Please try again.")
+            logger.warning("Failed login attempt.")
 
     return render_template("login.html")
 
@@ -106,9 +122,12 @@ def login():
 @login_required
 def logout():
     """Logout route"""
+
+    user = data_manager.get_user(current_user.id)
     if request.method == "POST":
         logout_user()
         flash("You have been logged out.")
+        logger.info(f"User logged out: {user.username}")
         return redirect(url_for('login'))
 
     return render_template("logout.html")
@@ -190,10 +209,12 @@ def update_user(user_id):
             message = data_manager.update_user(user_id=user_id, user_name=user_name)
             user = data_manager.get_user(user_id)
         except Exception as e:
-            flash(f"Error updating user: {e}")
+            flash(f"Error updating user, try that again!")
+            logger.error(f"Error updating user: {e}")
             return render_template('update_user.html', user=user, user_id=user_id)
 
         flash(f"{message}")
+        logger.info(f"User details updated: {user.username}")
         return redirect(f"/users/{user_id}")
 
 
@@ -223,10 +244,11 @@ def delete_user(user_id):
                 return redirect('home')
             flash(f"User '{user_id}' has been deleted successfully!")
             logout_user()
+            logger.info(f"User '{user.username}' has been deleted.")
             return redirect(url_for("login"))
 
         except Exception as e:
-            print(f"Error deleting user: {e}")
+            logger.error(f"Error deleting user: {e}")
             flash("An error occurred while deleting the user. Please try again.")
             return redirect(url_for("home"))
 
@@ -241,13 +263,13 @@ def add_movie(user_id):
         return redirect(url_for("home"))
     
     # Fetch user details for display or validation
-    user_name = data_manager.get_user(user_id)
+    user = data_manager.get_user(user_id)
 
-    if not user_name:
+    if not user:
         raise NotFound
 
     if request.method == "GET":
-        return render_template("add_movie.html", user=user_name)
+        return render_template("add_movie.html", user=user)
 
     if request.method == "POST":
         title = request.form.get('title', '').strip()
@@ -255,7 +277,7 @@ def add_movie(user_id):
         # Validate input
         if not title:
             flash("Title is required.")
-            return render_template("add_movie.html", user=user_name)
+            return render_template("add_movie.html", user=user)
 
         try:
             result = data_manager.add_movie(user_id, title)
@@ -263,14 +285,15 @@ def add_movie(user_id):
             # Check the result of add_movie
             if result is None:  # Movie not found or failed to add
                 flash(f"Movie '{title}' doesn't exist. Make sure the title is correct.")
-                return render_template("add_movie.html", user=user_name)
+                return render_template("add_movie.html", user=user)
 
         except Exception as e:
-            print(f"Error: {e}")
+            logger.error(f"Error adding movie: {e}")
             flash("An error occurred while adding the movie. Please try again.")
-            return render_template("add_movie.html", user=user_name)
+            return render_template("add_movie.html", user=user)
 
         flash(f"Movie '{title}' has been added successfully.")
+        logger.info(f"Movie '{title}' has been added by {user.username}")
         return redirect(f"/users/{user_id}")
 
 
@@ -278,6 +301,13 @@ def add_movie(user_id):
 @login_required
 def update_movie(user_id, movie_id):
     """Updates a movie of a specific user"""
+
+    if int(current_user.id) != int(user_id):
+        flash("You can only add movies to your own profile.")
+        return redirect(url_for("home"))
+    
+    user = data_manager.get_user(user_id)
+
     if request.method == "GET":
 
         movie = data_manager.get_movie(movie_id)
@@ -292,12 +322,13 @@ def update_movie(user_id, movie_id):
         try:
             data_manager.update_movie(movie_id=movie_id, user_id=user_id, rating=personal_rating)
         except Exception as e:
-            print(f"Error: {e}")
+            logger.error(f"Error updating movie: {e}")
             flash("Error while updating movie. Try again!")
             return render_template('update_movie.html', movie=data_manager.get_movie(movie_id),
                                    user_id=user_id)
 
         flash(f"Movie '{movie.title}' has been updated successfully!")
+        logger.info(f"Movie '{movie.title}' has been updated by {user.username}")
         return redirect(f"/users/{user_id}")
 
 
@@ -305,6 +336,8 @@ def update_movie(user_id, movie_id):
 @login_required
 def delete_movie(user_id, movie_id):
     """Deletes a user's movie"""
+
+    user = data_manager.get_user(user_id)   
     try:
         del_movie = data_manager.delete_movie(movie_id, user_id)
 
@@ -313,10 +346,11 @@ def delete_movie(user_id, movie_id):
             return redirect(f"/users/{user_id}")
 
         flash(f"Movie '{del_movie.title}' has been deleted successfully!")
+        logger.info(f"Movie '{del_movie.title}' has been deleted by {user.username}")
         return redirect(f"/users/{user_id}")
 
     except Exception as e:
-        print(f"Error: {e}")
+        logger.error(f"Error deleting movie: {e}")
         flash(f"Error: {e}")
         return redirect(f"/users/{user_id}")
 
@@ -332,10 +366,11 @@ def like_movie(movie_id):
             return redirect(url_for('list_movies'))
 
         flash(f"Movie '{movie.title}' has been liked!")
+        logger.info(f"Movie '{movie.title}' has been liked by {current_user.username}")
         return redirect(url_for('list_movies', movie_id=movie.id))  # Redirect to the movie details page
 
     except Exception as e:
-        print(f"Error: {e}")
+        logger.error(f"Error liking movie: {e}")
         flash("An error occurred while liking the movie.")
         return redirect(url_for('list_movies'))
 
@@ -343,12 +378,16 @@ def like_movie(movie_id):
 @app.errorhandler(404)
 def page_not_found(e):
     """404 Error handling route"""
+
+    logger.warning(f"404 Error: {request.url} not found")
     return render_template('404.html'), 404
 
 
 @app.errorhandler(500)
 def network_error(e):
     """500 error handling route"""
+
+    logger.error(f"500 Internal Server Error: {str(e)}")
     return render_template("500.html"), 500
 
 
