@@ -17,6 +17,7 @@ class User(UserMixin,db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String,unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
+    profile_picture = Column(String, nullable=True, default='default.png')
 
     def set_password(self, password):
         """Hashes and stores the password."""

@@ -6,6 +6,7 @@ from data_manager.SQLite_data_manager import SQLiteDataManager
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.exceptions import NotFound
+from werkzeug.utils import secure_filename
 
 load_dotenv()
 
@@ -27,6 +28,14 @@ app.secret_key = os.getenv('SECRET_KEY')
 base_dir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{base_dir}/data/movies.sqlite"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Configure file upload settings
+UPLOAD_FOLDER = "static/uploads"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Initialize DataManager
 data_manager = SQLiteDataManager(app)
@@ -83,7 +92,7 @@ def register():
             logger.warning(f"Registration failed: {message}")
             return render_template("register.html")
         
-        flash(f"{message}", "error")
+        flash(f"{message}", "success")
         logger.info(f"New user registered: {username}")
         return redirect(url_for('login'))
     
@@ -177,7 +186,7 @@ def user_movies(user_id):
             flash(message)
     except Exception as e:
         logger.error(f"Error fetching user movies: {e}")
-        flash("Error loading your profile {user_name.username}. Please try again.", "error")
+        flash("Error loading your Movies. Try adding some.", "info")
         movies = []
 
     return render_template('profile.html', user=user_name, movies=movies)
@@ -202,18 +211,29 @@ def update_user(user_id):
     if request.method == "POST":
 
         user_name = request.form.get("name").strip()
-        if not user_name:
-            flash("Username can't be empty.", "error")
-            return render_template('update_user.html', user=user, user_id=user_id)
+        file = request.files.get("profile_picture")
+        remove_profile_picture = request.form.get("remove_profile_picture")
+        filename = None
         
         try:
-            # Update user details
-            message = data_manager.update_user(user_id=user_id, user_name=user_name)
-            user = data_manager.get_user(user_id)
+            if remove_profile_picture:
+                 filename = "default.png"
+
+            elif file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"], filename)
+                file.save(file_path)
+
+            # Update all user details
+            message = data_manager.update_user(
+                user_id=user_id,
+                user_name=user_name if user_name else user.username,
+                profile_picture=filename if (file or remove_profile_picture) else user.profile_picture)
+                
         except Exception as e:
             flash(f"Error updating user, try that again!", "error")
             logger.error(f"Error updating user: {e}")
-            return render_template('update_user.html', user=user, user_id=user_id)
+            return redirect(f"/users/{user_id}/update_user")
 
         flash(f"{message}", "success")
         logger.info(f"User details updated: {user.username}")

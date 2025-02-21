@@ -6,6 +6,8 @@
     <div class="user-grid">
         {% for user in users %}
             <div class="card user-card">
+                <img src="{{ url_for('static', filename='uploads/' + (user.profile_picture or 'default.png')) }}" 
+                alt="Profile Picture" class="profile-pic">
                 <h2>{{ user.username }}</h2>
                 <p><strong>ID:</strong> {{ user.id }}</p>
             </div>
