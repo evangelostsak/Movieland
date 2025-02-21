@@ -24,11 +24,24 @@
         <a href="{{ url_for('list_users') }}">Users</a>
         <a href="{{ url_for('list_movies') }}">Movies</a>
         {% if current_user.is_authenticated %}
-        <a href="{{ url_for('logout') }}">Logout</a>
-        {% else %}
+        <div class="user-dropdown">
+            <div class="user-info">
+                {% if current_user.profile_picture %}
+                    <img src="{{ url_for('static', filename='uploads/' + current_user.profile_picture) }}" alt="Profile Picture" class="user-avatar">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/default_avatar.png') }}" alt="Default Avatar" class="user-avatar">
+                {% endif %}
+                <span class="user-name">{{ current_user.username }}</span>
+            </div>
+            <div class="dropdown-menu">
+                <p>You are logged in as <strong>{{ current_user.username }}</strong></p>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    {% else %}
         <a href="{{ url_for('register') }}">Register</a>
         <a href="{{ url_for('login') }}">Login</a>
-        {% endif %}
+    {% endif %}
     </nav>
     <div class="container">
         {% with messages = get_flashed_messages(with_categories=True) %}

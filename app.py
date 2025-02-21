@@ -186,7 +186,7 @@ def user_movies(user_id):
             flash(message)
     except Exception as e:
         logger.error(f"Error fetching user movies: {e}")
-        flash("Error loading your Movies. Try adding some.", "info")
+        flash("Couldn't find any Movies. Try adding some.", "info")
         movies = []
 
     return render_template('profile.html', user=user_name, movies=movies)

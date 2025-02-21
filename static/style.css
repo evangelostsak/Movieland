@@ -335,7 +335,7 @@ nav a {
     color: #e0e0e0;
     text-decoration: none;
     margin: 0 1.5rem;
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     transition: color 0.3s ease, transform 0.2s ease;
 }
 
@@ -538,6 +538,78 @@ header::before {
     font-size: 2.5rem;
     letter-spacing: 5px;
 }
+
+/* User Dropdown */
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.user-info:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+}
+
+.user-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #252525;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 180px;
+    z-index: 1000;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.dropdown-menu p {
+    margin: 10px;
+    color: #ccc;
+}
+
+.dropdown-menu a {
+    display: block;
+    color: #ffffff;
+    padding: 10px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.dropdown-menu a:hover {
+    background-color: #4CAF50;
+    color: #ffffff;
+}
+
+/* Show dropdown on hover */
+.user-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
 /* content in homepage */
 /* Style for content_home */
 .content_home {
