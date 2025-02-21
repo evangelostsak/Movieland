@@ -11,3 +11,6 @@ TODO.txt
 
 #ignore log files
 logs/app.log
+
+#ignore more uploaded images
+static/uploads/
