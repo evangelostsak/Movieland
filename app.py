@@ -211,6 +211,7 @@ def update_user(user_id):
     if request.method == "POST":
 
         user_name = request.form.get("name").strip()
+        password = request.form.get("password").strip()
         file = request.files.get("profile_picture")
         remove_profile_picture = request.form.get("remove_profile_picture")
         filename = None
@@ -228,6 +229,7 @@ def update_user(user_id):
             message = data_manager.update_user(
                 user_id=user_id,
                 user_name=user_name if user_name else user.username,
+                password=password if password else user.password_hash,
                 profile_picture=filename if (file or remove_profile_picture) else user.profile_picture)
                 
         except Exception as e:

@@ -109,7 +109,7 @@ class SQLiteDataManager(DataManagerInterface):
             self.db.session.rollback()
             return f"Error deleting user with ID {user_id}: {e}"
 
-    def update_user(self, user_id, user_name, profile_picture=None):
+    def update_user(self, user_id, user_name, password, profile_picture=None):
         """Update user's name in database"""
 
         # check if user exists
@@ -121,6 +121,9 @@ class SQLiteDataManager(DataManagerInterface):
             
             if profile_picture:
                 update_user.profile_picture = profile_picture
+            
+            if password:
+                update_user.set_password(password)
 
             self.db.session.commit()
             return f"User '{user_name}' was updated successfully."
