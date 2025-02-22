@@ -1,7 +1,6 @@
 import os
-import sqlalchemy
 import logging
-from flask import Flask, request, render_template, redirect, flash, url_for, session
+from flask import Flask, request, render_template, redirect, flash, url_for
 from data_manager.SQLite_data_manager import SQLiteDataManager
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
