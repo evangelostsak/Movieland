@@ -14,3 +14,6 @@ logs/app.log
 
 #ignore more uploaded images
 static/uploads/
+
+#ds store files
+.DS_Store
