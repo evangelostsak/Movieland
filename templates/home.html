@@ -6,21 +6,21 @@
 
 {% block content %}
     {% if current_user.is_authenticated %}
-    <h2 class="h2_home">Welcome to MovieLand, {{current_user.username}}!</h2>
+    <h2 class="h2_home">Hello, {{ current_user.username }}! Ready to explore some movies?</h2>
     {% else %}
     <h2 class="h2_home">Welcome to MovieLand!</h2>
     {% endif %}
 <div class="content_home">
     <p>Your personal movie hub for exploring, managing, and enjoying films.</p>
-    <p>Here, you can:</p>
+    <h3>🚀 Features You’ll Love</h3>
     <ul>
-        <li><strong>Add Movies:</strong> Search and add your favorite movies from OMDb.</li>
-        <li><strong>Manage Users:</strong> Create, update, and delete users in the app.</li>
-        <li><strong>Movie Management:</strong> Associate movies with users, update their details, and remove them when needed.</li>
-        <li><strong>Movie Collection:</strong> Keep track of all your movies in a personalized list.</li>
-        <li><strong>Interactive Actions:</strong> Like, update, and delete movies with ease!</li>
+        <li>🔑 <strong>User Authentication:</strong> Secure login & personalized profiles.</li>
+        <li>🎥 <strong>Movie Management:</strong> Add, edit, and delete movies with ease.</li>
+        <li>🔍 <strong>OMDb Integration:</strong> Fetch real-time movie details effortlessly.</li>
+        <li>👍 <strong>Like Movies:</strong> Show appreciation for your favorite films.</li>
+        <li>📸 <strong>Profile Customization:</strong> Set a profile picture & manage your account.</li>
+        <li>🛡️ <strong>Secure Sessions:</strong> Your data is safe with us.</li>
     </ul>
     <p>Explore, organize, and keep your movie collection fresh and exciting!</p>
-    <p>Read about all the detailed functionalities of the app in the 'Help' page!</p>
         </div>
 {% endblock %}
