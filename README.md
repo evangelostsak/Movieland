@@ -111,7 +111,7 @@ Navigate to `http://127.0.0.1:5000` to access the app.
 ---
 
 ## 🌐 Try Out Movieland
-http://evangelostsak.pythonanywhere.com/
+https://evangelostsak.pythonanywhere.com/
 
 ---
 
@@ -121,7 +121,7 @@ http://evangelostsak.pythonanywhere.com/
    - Example: `OMDB_API_KEY=your_key_here`
 
 2. **Flask Secret Key**: For session management and CSRF protection.
-   - Example: `FLASK_SECRET_KEY=your_secret_here`
+   - Example: `SECRET_KEY=your_secret_here`
 
 ---
 
