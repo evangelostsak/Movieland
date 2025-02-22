@@ -165,7 +165,7 @@ class SQLiteDataManager(DataManagerInterface):
             else:
                 # Create a new movie entry
                 new_movie = Movie(
-                    title=title,
+                    title=movie_data['title'],
                     director=movie_data['director'],
                     release_year=movie_data['release_year'],
                     rating=movie_data['rating'],
