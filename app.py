@@ -24,9 +24,14 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
-# Configure SQLite URI
+# Configure DATABASE_URI handling sqlite and postgres
 base_dir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{base_dir}/data/movies.sqlite"
+if os.getenv("FLASK_ENV") == "development":
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{base_dir}/data/movies.sqlite"
+else:
+    POSTGRES_URI = os.getenv("POSTGRES_URI")
+    app.config['SQLALCHEMY_DATABASE_URI'] = POSTGRES_URI
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Configure file upload settings
