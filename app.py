@@ -168,6 +168,31 @@ def list_movies():
 
 @app.route("/users/<user_id>", methods=["GET"])
 @login_required
+def user_profile(user_id):
+    """Displaying list of movies of a user"""
+
+    if int(current_user.id) != int(user_id):
+        flash("You can only see your own Movies.", "error")
+        return redirect(url_for("home"))
+
+    user_name = data_manager.get_user(user_id)
+    if not user_name:
+        raise NotFound
+
+    try:
+        message = request.args.get('message')
+        if message:
+            flash(message)
+    except Exception as e:
+        logger.error(f"Error fetching user movies: {e}")
+        flash("Couldn't find any Movies. Try adding some.", "info")
+        movies = []
+
+    return render_template('profile.html', user=user_name)
+
+
+@app.route("/users/<user_id>/movies", methods=["GET"])
+@login_required
 def user_movies(user_id):
     """Displaying list of movies of a user"""
 
@@ -189,7 +214,7 @@ def user_movies(user_id):
         flash("Couldn't find any Movies. Try adding some.", "info")
         movies = []
 
-    return render_template('profile.html', user=user_name, movies=movies)
+    return render_template('user_movies.html', user=user_name, movies=movies)
 
 
 @app.route("/users/<user_id>/update_user", methods=["GET", "POST"])
@@ -318,7 +343,7 @@ def add_movie(user_id):
 
         flash(f"Movie '{title}' has been added successfully.", "success")
         logger.info(f"Movie '{title}' has been added by {user.username}")
-        return redirect(f"/users/{user_id}")
+        return redirect(f"/users/{user_id}/movies")
 
 
 @app.route("/users/<user_id>/update_movie/<movie_id>", methods=["GET", "POST"])
@@ -353,7 +378,7 @@ def update_movie(user_id, movie_id):
 
         flash(f"Movie '{movie.title}' has been updated successfully!", "success")
         logger.info(f"Movie '{movie.title}' has been updated by {user.username}")
-        return redirect(f"/users/{user_id}")
+        return redirect(f"/users/{user_id}/movies")
 
 
 @app.route("/users/<user_id>/delete_movie/<movie_id>", methods=["GET"])
@@ -367,16 +392,16 @@ def delete_movie(user_id, movie_id):
 
         if not del_movie:
             flash(f"Movie '{movie_id}' not found.")
-            return redirect(f"/users/{user_id}")
+            return redirect(f"/users/{user_id}/movies")
 
         flash(f"Movie '{del_movie.title}' has been deleted successfully!", "success")
         logger.info(f"Movie '{del_movie.title}' has been deleted by {user.username}")
-        return redirect(f"/users/{user_id}")
+        return redirect(f"/users/{user_id}/movies")
 
     except Exception as e:
         logger.error(f"Error deleting movie: {e}")
         flash(f"""An error occurred while deleting the movie. Please try again.""", "error")
-        return redirect(f"/users/{user_id}")
+        return redirect(f"/users/{user_id}/movies")
 
 
 @app.route('/movies/likes/<int:movie_id>', methods=["POST"])

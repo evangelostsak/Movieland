@@ -3,45 +3,17 @@
     <h2>{{ user.username }}'s Profile</h2>
 {% endblock %}
 {% block content %}
-    <!-- Add Movie Button Positioned -->
-    <div class="add-movie-container">
-        <a href="{{ url_for('add_movie', user_id=user.id) }}" class="btn add-movie-btn">+ Add Movie</a>
-    </div>
-    <div class="user-actions-container">
-        <h3>Delete Account</h3>
-        <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn delete-btn">Delete</a>
-        <h3>Update Account</h3>
-        <a href="{{ url_for('update_user', user_id=user.id) }}" class="btn update-btn">Update</a>
-    </div>
-    <h1 class="h1-movies-profile">My Movies</h1>
-    <div class="movie-grid">
-        {% for movie in movies %}
-            <div class="card movie-card">
-                <!-- Movie Poster -->
-                {% if movie.poster %}
-                    <img src="{{ movie.poster }}" alt="{{ movie.title }} Poster" class="movie-poster">
-                {% else %}
-                    <img src="{{ url_for('static', filename='default-poster.jpg') }}" alt="Default Poster" class="movie-poster">
-                {% endif %}
-
-                <!-- Movie Details -->
-                <div class="movie-info">
-                    <h3>{{ movie.title }}</h3>
-                    <p><strong>Release Year:</strong> {{ movie.release_year or 'N/A' }}</p>
-                    <p><strong>Director:</strong> {{ movie.director or 'N/A' }}</p>
-                    <p><strong>Rating:</strong> {{ movie.rating or 'N/A' }}</p>
-                    <p><strong>Likes:</strong>{{ movie.likes or 'N/A'}}</p>
-                    {% if movie.link %}
-                        <p><a href="{{ movie.link }}" target="_blank" class="btn link-btn">More Info</a></p>
-                    {% endif %}
-                </div>
-
-                <!-- Action Buttons -->
+        <div class="user-grid">
+                <div class="card user-card">
+                    <img src="{{ url_for('static', filename='uploads/' + (user.profile_picture or 'default.png')) }}" 
+                    alt="Profile Picture" class="profile-pic">
+                    <h2>{{ user.username }}</h2>
+                    <p><strong>ID:</strong> {{ user.id }}</p>
                 <div class="actions">
-                    <a href="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" class="btn edit-btn">Edit</a>
-                    <a href="{{ url_for('delete_movie', movie_id=movie.id, user_id=user.id) }}" class="btn delete-btn">Remove</a>
-                </div>
-            </div>
-        {% endfor %}
+                    <a href="{{url_for('user_movies', user_id=user.id)}}" class="btn view_btn">My Movies</a>
+                    <a href="{{ url_for('update_user', user_id=user.id) }}" class="btn update-btn">Update Account</a>
+                    <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn delete-btn">Delete Account</a>
     </div>
+</div>
+</div>
 {% endblock %}

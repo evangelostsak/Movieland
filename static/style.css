@@ -47,17 +47,17 @@
     margin-top: 0.8rem;
     display: flex;
     justify-content: center;
-    gap: 0.5rem; /* Compact spacing between buttons */
+    gap: 1.5rem; /* Compact spacing between buttons */
     flex-wrap: wrap; /* Wrap buttons if they overflow */
 }
 
 .user-card .btn {
     display: inline-block;
-    padding: 0.4rem 0.7rem; /* Compact padding */
-    font-size: 0.8rem; /* Smaller button font size */
+    padding: 0.8rem 1.5rem; /* Compact padding */
+    font-size: 1.2rem; /* Smaller button font size */
     text-decoration: none;
-    color: #fff;
-    border-radius: 5px;
+    color: black;
+    border-radius: 15px;
     transition: background-color 0.3s ease, transform 0.2s ease;
     white-space: nowrap; /* Prevent text wrapping inside buttons */
 }
@@ -70,6 +70,9 @@
     background-color: #f0ad4e; /* Orange for update */
 }
 
+.user-card .update-btn:hover {
+    background-color: #fb9200; /* Dark Orange for update Hover */
+}
 .user-card .view-btn {
     background-color: #5bc0de; /* Light blue for view */
 }
@@ -126,61 +129,6 @@
 
 .actions {
     padding: 10px;
-}
-
-/* User Actions Container */
-.user-actions-container {
-    background-color: #252525; /* Dark background to match user card */
-    padding: 1rem;
-    margin-top: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    color: #e0e0e0;
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Action Titles */
-.user-actions-container h3 {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: #4CAF50; /* Accent color */
-}
-
-/* Action Buttons */
-.user-actions-container .btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    text-decoration: none;
-    color: white;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    white-space: nowrap;
-    margin: 0.5rem 0;
-    width: 80%;
-}
-
-/* Delete Button */
-.user-actions-container .delete-btn {
-    background-color: #d9534f;
-}
-
-.user-actions-container .delete-btn:hover {
-    background-color: #bd2130;
-    transform: scale(1.05);
-}
-
-/* Update Button */
-.user-actions-container .update-btn {
-    background-color: #f0ad4e;
-}
-
-.user-actions-container .update-btn:hover {
-    background-color: #d98c3c;
-    transform: scale(1.05);
 }
 
 .h1-movies-profile {
