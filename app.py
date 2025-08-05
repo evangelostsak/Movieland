@@ -445,10 +445,4 @@ def network_error(e):
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
     app.run(host="0.0.0.0", port=5000, debug=True)
-=======
-    app.run(host="0.0.0.0", port=5000, debug=True)
-
-#trigger test 1
->>>>>>> 0fc485d73b4565a2d78a73d1ff2449125750e3d9
