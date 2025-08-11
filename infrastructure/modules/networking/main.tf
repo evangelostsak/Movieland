@@ -9,46 +9,46 @@ resource "aws_vpc" "main" {
 
 resource "aws_subnet" "public_a" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidrs[1]
-  availability_zone       = var.availability_zones[1]
+  cidr_block              = var.public_subnet_cidrs[0]
+  availability_zone       = var.availability_zones[0]
   map_public_ip_on_launch = true
   tags = { Name = "public-a" }
 }
 
 resource "aws_subnet" "public_b" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidrs[2]
-  availability_zone       = var.availability_zones[2]
+  cidr_block              = var.public_subnet_cidrs[1]
+  availability_zone       = var.availability_zones[1]
   map_public_ip_on_launch = true
   tags = { Name = "public-b" }
 }
 
 resource "aws_subnet" "public_c" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidrs[3]
-  availability_zone       = var.availability_zones[3]
+  cidr_block              = var.public_subnet_cidrs[2]
+  availability_zone       = var.availability_zones[2]
   map_public_ip_on_launch = true
   tags = { Name = "public-c" }
 }
 
 resource "aws_subnet" "private_a" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet_cidrs[1]
-  availability_zone = var.availability_zones[1]
+  cidr_block        = var.private_subnet_cidrs[0]
+  availability_zone = var.availability_zones[0]
   tags = { Name = "private-a" }
 }
 
 resource "aws_subnet" "private_b" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet_cidrs[2]
-  availability_zone = var.availability_zones[2]
+  cidr_block        = var.private_subnet_cidrs[1]
+  availability_zone = var.availability_zones[1]
   tags = { Name = "private-b" }
 }
 
 resource "aws_subnet" "private_c" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet_cidrs[3]
-  availability_zone = var.availability_zones[3]
+  cidr_block        = var.private_subnet_cidrs[2]
+  availability_zone = var.availability_zones[2]
   tags = { Name = "private-c" }
 }
 
@@ -89,8 +89,8 @@ resource "aws_lb" "load_balancer" {
 
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.load_balancer.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = var.alb_ports[0]
+  protocol          = var.protocols[0]
 
   default_action {
     type             = "forward"
@@ -100,13 +100,13 @@ resource "aws_lb_listener" "http" {
 
 resource "aws_lb_target_group" "instances" {
   name     = "${var.app_name}-${var.environment_name}-tg"
-  port     = 80
-  protocol = "HTTP"
+  port     = var.alb_ports[0]
+  protocol = var.protocols[0]
   vpc_id   = aws_vpc.main.id
 
   health_check {
     path                = "/"
-    protocol            = "HTTP"
+    protocol            = var.protocols[0]
     matcher             = "200"
     interval            = 15
     timeout             = 3
