@@ -12,3 +12,13 @@ variable "environment_name" {
   description = "IP address to allow SSH access"
   type        = string
 }
+
+variable "security_group_ports" {
+  description = "List of ports to open in the security group"
+  type        = list(number)
+}
+
+variable "protocols" {
+  description = "Protocols for the Application Load Balancer"
+  type        = list(string)
+}

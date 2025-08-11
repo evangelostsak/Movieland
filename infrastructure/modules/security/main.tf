@@ -3,48 +3,26 @@ resource "aws_security_group" "ec2_sg" {
   vpc_id = aws_vpc.main.id
 }
 
-# Allow ALB to send traffic to Flask on EC2 (Port 5000)
+# Allow traffic from ALB to EC2 on flask port
 resource "aws_security_group_rule" "allow_flask_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.ec2_sg.id
 
-  from_port   = 80
-  to_port     = 80
-  protocol    = "http"
+  from_port   = var.security_group_ports[4]
+  to_port     = var.security_group_ports[4]
+  protocol    = var.protocols[2]
   source_security_group_id = aws_security_group.alb.id  # Only allow ALB traffic
 }
 
-# Allow SSH from your IP (Replace with your actual IP)
+# Allow SSH from a specific IP
 resource "aws_security_group_rule" "allow_ssh_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.ec2_sg.id
 
-  from_port   = 22
-  to_port     = 22
-  protocol    = "tcp"
+  from_port   = var.security_group_ports[0]
+  to_port     = var.security_group_ports[0]
+  protocol    = var.protocols[2]
   cidr_blocks = [var.allowed_ssh_ip]
-}
-
-# Allow EC2 to communicate with RDS on Port 5432
-resource "aws_security_group_rule" "allow_rds_inbound" {
-  type              = "ingress"
-  security_group_id = aws_security_group.ec2_sg.id
-
-  from_port   = 5432
-  to_port     = 5432
-  protocol    = "tcp"
-  source_security_group_id = aws_security_group.rds_sg.id
-}
-
-# Allow all outbound traffic from EC2
-resource "aws_security_group_rule" "allow_ec2_all_outbound" {
-  type              = "egress"
-  security_group_id = aws_security_group.ec2_sg.id
-
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group" "alb" {
@@ -56,22 +34,20 @@ resource "aws_security_group" "alb" {
 resource "aws_security_group_rule" "allow_alb_http_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.alb.id
-
-  from_port   = 80
-  to_port     = 80
-  protocol    = "tcp"
+  from_port   = var.security_group_ports[1]
+  to_port     = var.security_group_ports[1]
+  protocol    = var.protocols[0]
   cidr_blocks = ["0.0.0.0/0"]
 }
 
-# Allow ALB to send traffic to EC2 on Port 5000
-resource "aws_security_group_rule" "allow_alb_flask_outbound" {
-  type              = "egress"
+# Allow public access to ALB on Port 443
+resource "aws_security_group_rule" "allow_alb_https_inbound" {
+  type              = "ingress"
   security_group_id = aws_security_group.alb.id
-
-  from_port   = 80
-  to_port     = 80
-  protocol    = "http"
-  source_security_group_id = aws_security_group.ec2_sg.id
+  from_port   = var.security_group_ports[2]
+  to_port     = var.security_group_ports[2]
+  protocol    = var.protocols[1]
+  cidr_blocks = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group" "rds_sg" {
@@ -84,19 +60,8 @@ resource "aws_security_group_rule" "allow_rds_from_ec2" {
   type              = "ingress"
   security_group_id = aws_security_group.rds_sg.id
 
-  from_port   = 5432
-  to_port     = 5432
-  protocol    = "tcp"
+  from_port   = var.security_group_ports[3]
+  to_port     = var.security_group_ports[3]
+  protocol    = var.protocols[2]
   source_security_group_id = aws_security_group.ec2_sg.id
-}
-
-# Allow RDS to communicate out
-resource "aws_security_group_rule" "allow_rds_all_outbound" {
-  type              = "egress"
-  security_group_id = aws_security_group.rds_sg.id
-
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
 }
