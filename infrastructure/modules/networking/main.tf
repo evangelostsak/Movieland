@@ -89,7 +89,7 @@ resource "aws_lb" "load_balancer" {
 
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.load_balancer.arn
-  port              = var.alb_ports[0]
+  port              = var.alb_ports[2]
   protocol          = var.protocols[0]
 
   default_action {
@@ -100,7 +100,7 @@ resource "aws_lb_listener" "http" {
 
 resource "aws_lb_target_group" "instances" {
   name     = "${var.app_name}-${var.environment_name}-tg"
-  port     = var.alb_ports[0]
+  port     = var.alb_ports[2]
   protocol = var.protocols[0]
   vpc_id   = aws_vpc.main.id
 
