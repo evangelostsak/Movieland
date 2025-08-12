@@ -6,15 +6,15 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu_usage" {
   namespace           = "AWS/EC2"
   period              = 300
   statistic           = "Average"
-  threshold           = 80.0
+  threshold           = var.cpu_threshold
   alarm_description   = "Average CPU usage of ASG instances is too high"
   actions_enabled     = true
   alarm_actions       = [aws_sns_topic.cloudwatch_alerts.arn]
   ok_actions          = [aws_sns_topic.cloudwatch_alerts.arn]
 
-  dimensions = {
-    AutoScalingGroupName = aws_autoscaling_group.app_asg.name
-  }
+ dimensions = {
+  AutoScalingGroupName = var.asg_name
+ }
 }
 
 resource "aws_cloudwatch_metric_alarm" "low_disk_space" {
@@ -25,7 +25,7 @@ resource "aws_cloudwatch_metric_alarm" "low_disk_space" {
   namespace           = "CWAgent"
   period              = 300
   statistic           = "Average"
-  threshold           = 80.0
+  threshold           = var.disk_threshold
   alarm_description   = "Disk usage is over 80% on ASG instances"
   actions_enabled     = true
   alarm_actions       = [aws_sns_topic.cloudwatch_alerts.arn]
