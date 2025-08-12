@@ -25,3 +25,13 @@ variable "read_replica_az" {
   description = "Availability zone for read replica"
   type        = string
 }
+
+variable "subnet_ids" {
+  description = "List of private subnet IDs for DB"
+  type        = list(string)
+}
+
+variable "vpc_security_group_ids" {
+  description = "List of security group IDs for DB"
+  type        = list(string)
+}
