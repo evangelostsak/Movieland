@@ -13,12 +13,36 @@ variable "environment_name" {
   type        = string
 }
 
-variable "security_group_ports" {
-  description = "List of ports to open in the security group"
-  type        = list(number)
+variable "vpc_id" {
+  description = "ID of the VPC to create security groups in"
+  type        = string
 }
 
-variable "protocols" {
-  description = "Protocols for the Application Load Balancer"
-  type        = list(string)
+variable "flask_port" {
+  description = "Port Flask app listens on"
+  type        = number
+}
+
+variable "ssh_port" {
+  description = "Port for SSH access"
+  type        = number
+  default     = 22
+}
+
+variable "http_port" {
+  description = "Port for HTTP traffic"
+  type        = number
+  default     = 80
+}
+
+variable "https_port" {
+  description = "Port for HTTPS traffic"
+  type        = number
+  default     = 443
+}
+
+variable "postgres_port" {
+  description = "Port for PostgreSQL traffic"
+  type        = number
+  default     = 5432
 }
