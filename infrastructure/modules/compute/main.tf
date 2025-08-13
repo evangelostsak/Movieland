@@ -1,6 +1,6 @@
 resource "aws_launch_template" "app_template" {
   name_prefix   = "movieland-app-"
-  image_id      = var.ami
+  image_id      = var.ami_id
   instance_type = var.instance_type
   key_name      = var.key_name
   iam_instance_profile {
@@ -9,7 +9,7 @@ resource "aws_launch_template" "app_template" {
   monitoring {
     enabled = true
   }
-  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+  vpc_security_group_ids = [var.sg_id]
   user_data = base64encode(<<-EOF
   #!/bin/bash
   apt update -y
@@ -62,7 +62,7 @@ resource "aws_autoscaling_group" "app_asg" {
   min_size                  = var.asg_min_size
   max_size                  = var.asg_max_size
   desired_capacity          = var.asg_desired_capacity
-  vpc_zone_identifier       = [aws_subnet.public_a.id, aws_subnet.public_b.id, aws_subnet.public_c.id]
+  vpc_zone_identifier       = var.subnet_ids
   target_group_arns         = [aws_lb_target_group.instances.arn]
   health_check_type         = "EC2"
   health_check_grace_period = 300
