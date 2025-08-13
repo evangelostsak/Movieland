@@ -40,8 +40,3 @@ variable "alb_ports" {
   description = "Ports of the Application Load Balancer"
   type        = list(number)
 }
-
-variable "protocols" {
-  description = "Protocols for the Application Load Balancer"
-  type        = list(string)
-}

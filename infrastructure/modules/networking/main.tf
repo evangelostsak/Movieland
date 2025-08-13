@@ -90,7 +90,7 @@ resource "aws_lb" "load_balancer" {
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.load_balancer.arn
   port              = var.alb_ports[2]
-  protocol          = var.protocols[0]
+  protocol          = "http"
 
   default_action {
     type             = "forward"
@@ -101,12 +101,12 @@ resource "aws_lb_listener" "http" {
 resource "aws_lb_target_group" "instances" {
   name     = "${var.app_name}-${var.environment_name}-tg"
   port     = var.alb_ports[2]
-  protocol = var.protocols[0]
+  protocol = "http"
   vpc_id   = aws_vpc.main.id
 
   health_check {
     path                = "/"
-    protocol            = var.protocols[0]
+    protocol            = "http"
     matcher             = "200"
     interval            = 15
     timeout             = 3
