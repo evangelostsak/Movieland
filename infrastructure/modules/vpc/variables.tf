@@ -9,11 +9,6 @@ variable "environment_name" {
   type        = string
 }
 
-  variable "allowed_ssh_ip" {
-  description = "IP address to allow SSH access"
-  type        = string
-}
-
 # VPC & Subnet CIDRs
 
 variable "vpc_cidr" {
@@ -34,9 +29,4 @@ variable "private_subnet_cidrs" {
 variable "availability_zones" {
   description = "List of availability zones to deploy into"
   type        = list(string)
-}
-
-variable "alb_ports" {
-  description = "Ports of the Application Load Balancer"
-  type        = list(number)
 }

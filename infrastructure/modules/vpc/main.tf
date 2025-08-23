@@ -79,38 +79,3 @@ resource "aws_route_table_association" "public_c" {
   subnet_id      = aws_subnet.public_c.id
   route_table_id = aws_route_table.public.id
 }
-
-resource "aws_lb" "load_balancer" {
-  name               = "${var.app_name}-${var.environment_name}-web-app-lb"
-  load_balancer_type = "application"
-  subnets = [aws_subnet.public_a.id, aws_subnet.public_b.id, aws_subnet.public_c.id]
-  security_groups    = [aws_security_group.alb.id]
-}
-
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.load_balancer.arn
-  port              = var.alb_ports[2]
-  protocol          = "http"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.instances.arn
-  }
-}
-
-resource "aws_lb_target_group" "instances" {
-  name     = "${var.app_name}-${var.environment_name}-tg"
-  port     = var.alb_ports[2]
-  protocol = "http"
-  vpc_id   = aws_vpc.main.id
-
-  health_check {
-    path                = "/"
-    protocol            = "http"
-    matcher             = "200"
-    interval            = 15
-    timeout             = 3
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-  }
-}
