@@ -18,6 +18,11 @@ variable "ami_id" {
   description = "AMI ID for the EC2 instance"
 }
 
+variable "instance_profile_name" {
+  type        = string
+  description = "IAM Instance Profile name for EC2 instances"
+}
+
 variable "instance_type" {
   type        = string
   description = "EC2 instance type"
@@ -46,4 +51,9 @@ variable "asg_max_size" {
 variable "asg_desired_capacity" {
   type        = number
   description = "Desired capacity of the ASG"
+}
+
+variable "target_group_arn" {
+  type        = string
+  description = "ARN of the Target Group to attach to the ASG"
 }
