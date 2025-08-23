@@ -46,3 +46,23 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
   name = "${var.app_name}-${var.environment_name}-s3_instance_profile"
   role = aws_iam_role.ec2_s3_role.name
 }
+
+# # IAM Role for RDS Monitoring
+# resource "aws_iam_role" "rds_monitoring" {
+#   name = "rds-monitoring-role"
+
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [{
+#       Effect = "Allow"
+#       Principal = { Service = "monitoring.rds.amazonaws.com" }
+#       Action = "sts:AssumeRole"
+#     }]
+#   })
+# }
+
+# # Attach RDS monitoring policy to the role
+# resource "aws_iam_role_policy_attachment" "rds_monitoring_policy" {
+#   role       = aws_iam_role.rds_monitoring.name
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+# }
