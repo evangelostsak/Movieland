@@ -18,3 +18,13 @@ variable "disk_threshold" {
   description = "Disk usage threshold for low disk space alarm"
   type        = number
 }
+
+variable "app_name" {
+  description = "Application name"
+  type        = string
+}
+
+variable "environment_name" {
+  description = "Environment name"
+  type        = string
+}
