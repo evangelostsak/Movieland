@@ -24,8 +24,8 @@ resource "aws_db_instance" "db_read_replica" {
   backup_retention_period = 7
   skip_final_snapshot     = true
   publicly_accessible     = false
-  monitoring_interval     = 60
-  monitoring_role_arn     = aws_iam_role.rds_monitoring.arn
+  # monitoring_interval     = 60
+  # monitoring_role_arn     = aws_iam_role.rds_monitoring.arn
   availability_zone       = var.read_replica_az
 
   depends_on = [aws_db_instance.db_instance]
