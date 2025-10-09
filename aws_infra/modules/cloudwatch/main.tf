@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "high_cpu_usage" {
-  alarm_name          = "${var.app_name}-${var.environment_name}-high_cpu"
+  alarm_name          = "${var.project_name}-${var.environment}-high_cpu"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
@@ -18,7 +18,7 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu_usage" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "low_disk_space" {
-  alarm_name          = "${var.app_name}-${var.environment_name}-low_disk_space"
+  alarm_name          = "${var.project_name}-${var.environment}-low_disk_space"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 2
   metric_name         = "disk_used_percent"
@@ -39,7 +39,7 @@ resource "aws_cloudwatch_metric_alarm" "low_disk_space" {
 }
 
 resource "aws_sns_topic" "cloudwatch_alerts" {
-  name = "${var.app_name}-${var.environment_name}-cloudwatch_alerts"
+  name = "${var.project_name}-${var.environment}-cloudwatch_alerts"
 }
 
 resource "aws_sns_topic_subscription" "email_subscription" {
