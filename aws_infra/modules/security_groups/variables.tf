@@ -1,5 +1,8 @@
+#######################################
+# Common Variables
+#######################################
 variable "project_name" {
-  description = "Name of the project"
+  description = "Name of the Project"
   type        = string
 }
 
@@ -13,6 +16,10 @@ variable "common_tags" {
   type        = map(string)
   default     = {}
 }
+
+#######################################
+# Security Group Variables
+#######################################
 
   variable "allowed_ssh_ip" {
   description = "IP address to allow SSH access"
