@@ -1,11 +1,13 @@
-
+#######################################
+# Common Variables
+#######################################
 variable "project_name" {
-  description = "Name of the web application"
+  description = "Name of the Project"
   type        = string
 }
 
 variable "environment" {
-  description = "Deployment environment (dev/staging/production)"
+  description = "Name of the Environment"
   type        = string
 }
 
@@ -15,6 +17,9 @@ variable "common_tags" {
   default     = {}
 }
 
+#######################################
+# ALB Variables
+#######################################
 variable "alb_sg_id" {
   type        = string
   description = "Security group ID for the ALB"
