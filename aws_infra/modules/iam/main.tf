@@ -1,6 +1,6 @@
 # IAM Role & Policy
 resource "aws_iam_role" "ec2_s3_role" {
-  name = "${var.app_name}-${var.environment_name}-s3_access_role"
+  name = "${var.project_name}-${var.environment}-s3_access_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -16,7 +16,7 @@ resource "aws_iam_role" "ec2_s3_role" {
 }
 
 resource "aws_iam_policy" "s3_access_policy" {
-  name        = "${var.app_name}-${var.environment_name}-s3_access_policy"
+  name        = "${var.project_name}-${var.environment}-s3_access_policy"
   description = "Allow EC2 to access specific S3"
   policy = jsonencode({
     Version = "2012-10-17",
@@ -43,7 +43,7 @@ resource "aws_iam_role_policy_attachment" "attach_s3_policy" {
 }
 
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
-  name = "${var.app_name}-${var.environment_name}-s3_instance_profile"
+  name = "${var.project_name}-${var.environment}-s3_instance_profile"
   role = aws_iam_role.ec2_s3_role.name
 }
 
