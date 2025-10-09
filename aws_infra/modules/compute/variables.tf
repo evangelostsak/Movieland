@@ -1,11 +1,14 @@
+#######################################
+# Common Variables
+#######################################
 variable "project_name" {
+  description = "Name of the Project"
   type        = string
-  description = "Application name tag"
 }
 
 variable "environment" {
+  description = "Name of the Environment"
   type        = string
-  description = "Environment name tag"
 }
 
 variable "common_tags" {
@@ -13,6 +16,10 @@ variable "common_tags" {
   type        = map(string)
   default     = {}
 }
+
+#######################################
+# Compute Variables
+#######################################
 
 variable "key_name" {
   type        = string
