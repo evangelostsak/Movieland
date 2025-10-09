@@ -1,5 +1,5 @@
 resource "aws_lb" "load_balancer" {
-  name               = "${var.app_name}-${var.environment_name}-alb"
+  name               = "${var.project_name}-${var.environment}-alb"
   load_balancer_type = "application"
   subnets            = var.public_subnet_ids
   security_groups    = [var.alb_sg_id]
@@ -17,7 +17,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_target_group" "instances" {
-  name     = "${var.app_name}-${var.environment_name}-tg"
+  name     = "${var.project_name}-${var.environment}-tg"
   port     = var.alb_ports[2]
   protocol = "HTTP"
   vpc_id   = var.vpc_id
