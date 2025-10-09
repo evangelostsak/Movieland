@@ -1,11 +1,17 @@
-variable "app_name" {
-  description = "Name of the web application"
+variable "project_name" {
+  description = "Name of the project"
   type        = string
 }
 
-variable "environment_name" {
-  description = "Deployment environment (dev/staging/production)"
+variable "environment" {
+  description = "Name of the Environment"
   type        = string
+}
+
+variable "common_tags" {
+  description = "Common tags to be applied to all resources"
+  type        = map(string)
+  default     = {}
 }
 
   variable "allowed_ssh_ip" {
