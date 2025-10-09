@@ -1,10 +1,13 @@
+#######################################
+# Common Variables
+#######################################
 variable "project_name" {
-  description = "Project name"
+  description = "Name of the Project"
   type        = string
 }
 
 variable "environment" {
-  description = "Environment name"
+  description = "Name of the Environment"
   type        = string
 }
 
@@ -13,6 +16,10 @@ variable "common_tags" {
   type        = map(string)
   default     = {}
 }
+
+#######################################
+# Database Variables
+#######################################
 
 variable "db_name" {
   description = "Name of DB"
