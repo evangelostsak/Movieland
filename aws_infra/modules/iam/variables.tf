@@ -1,10 +1,13 @@
+#######################################
+# Common Variables
+#######################################
 variable "project_name" {
-  description = "Project name"
+  description = "Name of the Project"
   type        = string
 }
 
 variable "environment" {
-  description = "Environment name"
+  description = "Name of the Environment"
   type        = string
 }
 
@@ -13,6 +16,10 @@ variable "common_tags" {
   type        = map(string)
   default     = {}
 }
+
+#######################################
+# IAM Variables
+#######################################
 
 variable "s3_bucket_arn" {
   description = "ARN of the S3 bucket EC2 should access"
