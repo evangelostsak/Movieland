@@ -21,7 +21,7 @@ variable "common_tags" {
 # Storage Variables
 #######################################
 
-variable "s3_bucket_prefix" {
+variable "bucket_prefix" {
   description = "Prefix for the S3 bucket name"
   type        = string
 }
