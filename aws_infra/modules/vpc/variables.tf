@@ -1,4 +1,6 @@
-# Common vars
+#######################################
+# Common Variables
+#######################################
 variable "project_name" {
   description = "Name of the Project"
   type        = string
@@ -15,7 +17,9 @@ variable "common_tags" {
   default     = {}
 }
 
-# VPC & Subnet CIDRs
+#######################################
+# VPC Variables
+#######################################
 
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
