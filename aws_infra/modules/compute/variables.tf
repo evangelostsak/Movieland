@@ -1,3 +1,19 @@
+variable "project_name" {
+  type        = string
+  description = "Application name tag"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment name tag"
+}
+
+variable "common_tags" {
+  description = "Common tags to be applied to all resources"
+  type        = map(string)
+  default     = {}
+}
+
 variable "key_name" {
   type        = string
   description = "Name of the SSH key pair to use for EC2 instances"
@@ -26,16 +42,6 @@ variable "instance_profile_name" {
 variable "instance_type" {
   type        = string
   description = "EC2 instance type"
-}
-
-variable "app_name" {
-  type        = string
-  description = "Application name tag"
-}
-
-variable "environment_name" {
-  type        = string
-  description = "Environment name tag"
 }
 
 variable "asg_min_size" {
