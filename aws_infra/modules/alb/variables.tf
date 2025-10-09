@@ -1,12 +1,18 @@
 
-variable "app_name" {
+variable "project_name" {
   description = "Name of the web application"
   type        = string
 }
 
-variable "environment_name" {
+variable "environment" {
   description = "Deployment environment (dev/staging/production)"
   type        = string
+}
+
+variable "common_tags" {
+  description = "Common tags to be applied to all resources"
+  type        = map(string)
+  default     = {}
 }
 
 variable "alb_sg_id" {
