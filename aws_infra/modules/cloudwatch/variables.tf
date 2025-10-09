@@ -1,4 +1,18 @@
-# Monitoring Variables
+variable "project_name" {
+  description = "Project name"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "common_tags" {
+  description = "Common tags to apply to all resources"
+  type        = map(string)
+  default     = {}
+}
 
 variable "alert_email" {
   description = "Email address for SNS alerts"
@@ -17,14 +31,4 @@ variable "cpu_threshold" {
 variable "disk_threshold" {
   description = "Disk usage threshold for low disk space alarm"
   type        = number
-}
-
-variable "app_name" {
-  description = "Application name"
-  type        = string
-}
-
-variable "environment_name" {
-  description = "Environment name"
-  type        = string
 }
