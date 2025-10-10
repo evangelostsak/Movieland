@@ -1,5 +1,5 @@
 resource "aws_security_group" "ec2_sg" {
-  name = "${var.app_name}-${var.environment_name}-instance-security-group"
+  name = "${var.project_name}-${var.environment}-instance-security-group"
   vpc_id = var.vpc_id
 }
 
@@ -36,7 +36,7 @@ resource "aws_security_group_rule" "ec2_allow_all_outbound" {
 }
 
 resource "aws_security_group" "alb" {
-  name   = "${var.app_name}-${var.environment_name}-alb-security-group"
+  name   = "${var.project_name}-${var.environment}-alb-security-group"
   vpc_id = var.vpc_id
 }
 
@@ -61,7 +61,7 @@ resource "aws_security_group_rule" "allow_alb_https_inbound" {
 }
 
 resource "aws_security_group" "rds_sg" {
-  name   = "${var.app_name}-${var.environment_name}-rds-security-group"
+  name   = "${var.project_name}-${var.environment}-rds-security-group"
   vpc_id = var.vpc_id
 }
 

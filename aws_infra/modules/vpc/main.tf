@@ -2,9 +2,9 @@ resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags = {
-    Name = "${var.app_name}-${var.environment_name}-vpc"
-  }
+  tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-vpc"
+  })
 }
 
 resource "aws_subnet" "public_a" {
@@ -12,7 +12,9 @@ resource "aws_subnet" "public_a" {
   cidr_block              = var.public_subnet_cidrs[0]
   availability_zone       = var.availability_zones[0]
   map_public_ip_on_launch = true
-  tags = { Name = "public-a" }
+  tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-public-a"
+  })
 }
 
 resource "aws_subnet" "public_b" {
@@ -20,7 +22,9 @@ resource "aws_subnet" "public_b" {
   cidr_block              = var.public_subnet_cidrs[1]
   availability_zone       = var.availability_zones[1]
   map_public_ip_on_launch = true
-  tags = { Name = "public-b" }
+  tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-public-b"
+  })
 }
 
 resource "aws_subnet" "public_c" {
@@ -28,28 +32,36 @@ resource "aws_subnet" "public_c" {
   cidr_block              = var.public_subnet_cidrs[2]
   availability_zone       = var.availability_zones[2]
   map_public_ip_on_launch = true
-  tags = { Name = "public-c" }
+  tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-public-c"
+  })
 }
 
 resource "aws_subnet" "private_a" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.private_subnet_cidrs[0]
   availability_zone = var.availability_zones[0]
-  tags = { Name = "private-a" }
+  tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-private-a"
+  })
 }
 
 resource "aws_subnet" "private_b" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.private_subnet_cidrs[1]
   availability_zone = var.availability_zones[1]
-  tags = { Name = "private-b" }
+  tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-private-b"
+  })
 }
 
 resource "aws_subnet" "private_c" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.private_subnet_cidrs[2]
   availability_zone = var.availability_zones[2]
-  tags = { Name = "private-c" }
+  tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-private-c"
+  })
 }
 
 resource "aws_internet_gateway" "igw" {

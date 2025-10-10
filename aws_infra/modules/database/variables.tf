@@ -1,4 +1,25 @@
-# RDS Variables
+#######################################
+# Common Variables
+#######################################
+variable "project_name" {
+  description = "Name of the Project"
+  type        = string
+}
+
+variable "environment" {
+  description = "Name of the Environment"
+  type        = string
+}
+
+variable "common_tags" {
+  description = "Common tags to be applied to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+#######################################
+# Database Variables
+#######################################
 
 variable "db_name" {
   description = "Name of DB"

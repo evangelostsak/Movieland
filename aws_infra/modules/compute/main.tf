@@ -1,5 +1,5 @@
 resource "aws_launch_template" "app_template" {
-  name_prefix          = "${var.app_name}-${var.environment_name}-app"
+  name_prefix          = "${var.project_name}-${var.environment}-app"
   image_id             = var.ami_id
   instance_type        = var.instance_type
   key_name             = var.key_name
@@ -12,11 +12,11 @@ resource "aws_launch_template" "app_template" {
   vpc_security_group_ids = [var.sg_id]
 
   # Dynamically configure CloudWatch Agent using file
-  user_data = file("${path.module}/cloudwatch.sh")
+  user_data = file("${path.module}/scripts/cloudwatch.sh")
 }
 
 resource "aws_autoscaling_group" "app_asg" {
-  name                      = "${var.app_name}-${var.environment_name}-asg"
+  name                      = "${var.project_name}-${var.environment}-asg"
   min_size                  = var.asg_min_size
   max_size                  = var.asg_max_size
   desired_capacity          = var.asg_desired_capacity
@@ -32,7 +32,7 @@ resource "aws_autoscaling_group" "app_asg" {
 
   tag {
     key                 = "Name"
-    value               = "${var.app_name}-${var.environment_name}-instance"
+    value               = "${var.project_name}-${var.environment}-instance"
     propagate_at_launch = true
   }
 }

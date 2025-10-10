@@ -1,14 +1,25 @@
-
-variable "app_name" {
-  description = "Name of the web application"
+#######################################
+# Common Variables
+#######################################
+variable "project_name" {
+  description = "Name of the Project"
   type        = string
 }
 
-variable "environment_name" {
-  description = "Deployment environment (dev/staging/production)"
+variable "environment" {
+  description = "Name of the Environment"
   type        = string
 }
 
+variable "common_tags" {
+  description = "Common tags to be applied to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+#######################################
+# ALB Variables
+#######################################
 variable "alb_sg_id" {
   type        = string
   description = "Security group ID for the ALB"
