@@ -13,6 +13,13 @@ resource "aws_launch_template" "app_template" {
 
   # Dynamically configure CloudWatch Agent using file
   user_data = file("${path.module}/scripts/cloudwatch.sh")
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = merge(local.merged_tags, {
+      Name = "${var.project_name}-${var.environment}-instance"
+    })
+  }
 }
 
 resource "aws_autoscaling_group" "app_asg" {
@@ -30,9 +37,14 @@ resource "aws_autoscaling_group" "app_asg" {
     version = "$Latest"
   }
 
-  tag {
-    key                 = "Name"
-    value               = "${var.project_name}-${var.environment}-instance"
-    propagate_at_launch = true
+  dynamic "tag" {
+    for_each = merge(local.merged_tags, {
+      Name = "${var.project_name}-${var.environment}-instance"
+    })
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
   }
 }
