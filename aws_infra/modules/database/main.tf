@@ -14,7 +14,10 @@ resource "aws_db_instance" "db_instance" {
   # monitoring_role_arn = aws_iam_role.rds_monitoring.arn
   db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
   publicly_accessible  = false
- vpc_security_group_ids = var.vpc_security_group_ids
+  vpc_security_group_ids = var.vpc_security_group_ids
+  tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-db"
+  })
 }
 
 resource "aws_db_instance" "db_read_replica" {
@@ -30,6 +33,10 @@ resource "aws_db_instance" "db_read_replica" {
   availability_zone       = var.read_replica_az
 
   depends_on = [aws_db_instance.db_instance]
+
+    tags = merge(local.merged_tags, {
+      Name = "${var.project_name}-${var.environment}-db-replica"
+  })
 }
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "movieland-db-subnet-group"
