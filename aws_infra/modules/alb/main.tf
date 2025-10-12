@@ -3,6 +3,9 @@ resource "aws_lb" "load_balancer" {
   load_balancer_type = "application"
   subnets            = var.public_subnet_ids
   security_groups    = [var.alb_sg_id]
+  tags               = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-alb"
+  })
 }
 
 resource "aws_lb_listener" "http" {
@@ -31,4 +34,7 @@ resource "aws_lb_target_group" "instances" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
   }
+  tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-tg"
+  })
 }
