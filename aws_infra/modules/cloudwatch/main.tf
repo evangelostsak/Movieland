@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "high_cpu_usage" {
-  alarm_name          = "${var.project_name}-${var.environment}-high_cpu"
+  alarm_name          = "${var.project_name}-${var.environment}-high-cpu-usage"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
@@ -15,10 +15,14 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu_usage" {
  dimensions = {
   AutoScalingGroupName = var.asg_name
  }
+
+ tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-high-cpu-usage"
+  })
 }
 
 resource "aws_cloudwatch_metric_alarm" "low_disk_space" {
-  alarm_name          = "${var.project_name}-${var.environment}-low_disk_space"
+  alarm_name          = "${var.project_name}-${var.environment}-low-disk-space"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 2
   metric_name         = "disk_used_percent"
@@ -36,6 +40,10 @@ resource "aws_cloudwatch_metric_alarm" "low_disk_space" {
     Filesystem           = "/dev/xvda1"
     MountPath            = "/"
   }
+
+  tags = merge(local.merged_tags, {
+    Name = "${var.project_name}-${var.environment}-low-disk-space"
+  })
 }
 
 resource "aws_sns_topic" "cloudwatch_alerts" {
